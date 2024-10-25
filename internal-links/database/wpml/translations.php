@@ -1,8 +1,8 @@
 <?php
+
 namespace ILJ\Database\WPML;
 
 use ILJ\Database\Postmeta;
-
 /**
  * Database wrapper wpml table "icl_translations"
  *
@@ -11,8 +11,7 @@ use ILJ\Database\Postmeta;
  */
 class Translations
 {
-    const ILJ_DATABASE_TABLE_WPML_TRANSLATIONS = "icl_translations";
-
+    const ILJ_DATABASE_TABLE_WPML_TRANSLATIONS = 'icl_translations';
     /**
      * Retrieves all translation relations by type
      *
@@ -24,14 +23,10 @@ class Translations
     public static function getByElementType($type_prefix)
     {
         global $wpdb;
-
-        $query    = sprintf(
-            '
+        $query = sprintf('
             SELECT *
             FROM %s translations
-            WHERE element_type LIKE "%s%%"', $wpdb->prefix . self::ILJ_DATABASE_TABLE_WPML_TRANSLATIONS, $type_prefix . '_'
-        );
-
+            WHERE element_type LIKE "%s%%"', $wpdb->prefix . self::ILJ_DATABASE_TABLE_WPML_TRANSLATIONS, $type_prefix . '_');
         return $wpdb->get_results($query);
     }
 }

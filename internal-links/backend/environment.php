@@ -1,8 +1,8 @@
 <?php
+
 namespace ILJ\Backend;
 
 use ILJ\Core\Options;
-
 /**
  * Plugin Environment
  *
@@ -14,36 +14,27 @@ use ILJ\Core\Options;
 class Environment
 {
     /**
+     * Instance
+     *
      * @var   Environment
      * @since 1.0.1
      */
     private static $instance;
-
     /**
+     * Environment data
+     *
      * @var   array
      * @since 1.0.1
      */
     private $environment_data;
-
     protected function __construct()
     {
-        $environment_data_default = [
-            "last_version" => ILJ_VERSION,
-            "linkindex"    => [
-                "last_update" => [
-                    "date"     => "",
-                    "entries"  => "",
-                    "duration" => ""
-                ]
-            ],
-        ];
-
-        $environment_data       = Options::getOption(Options::ILJ_OPTION_KEY_ENVIRONMENT);
+        $environment_data_default = array('last_version' => ILJ_VERSION, 'linkindex' => array('last_update' => array('date' => '', 'entries' => '', 'duration' => '')));
+        $environment_data = Options::getOption(Options::ILJ_OPTION_KEY_ENVIRONMENT);
         $this->environment_data = wp_parse_args($environment_data, $environment_data_default);
     }
-
     /**
-     * Get data
+     * Get environment data
      *
      * @since  1.0.1
      * @param  string $key The key
@@ -58,9 +49,8 @@ class Environment
         }
         return false;
     }
-
     /**
-     * Update data
+     * Update environment data
      *
      * @since  1.0.1
      * @param  string $key   The key
@@ -70,11 +60,10 @@ class Environment
     public static function update($key, $value)
     {
         self::init();
-        $environment_data       = self::$instance->environment_data;
+        $environment_data = self::$instance->environment_data;
         $environment_data[$key] = $value;
         Options::setOption(Options::ILJ_OPTION_KEY_ENVIRONMENT, $environment_data);
     }
-
     /**
      * Init Environment- class
      *

@@ -10,12 +10,11 @@ namespace ILJ\Enumeration;
  */
 final class KeywordOrder
 {
-    const FIFO                 = "keyword_order_fifo";
-    const HIGH_WORDCOUNT_FIRST = "keyword_order_high_wordcount_first";
-    const LOW_WORDCOUNT_FIRST  = "keyword_order_low_wordcount_first";
-    const HIGH_CHARCOUNT_FIRST = "keyword_order_high_charcount_first";
-    const LOW_CHARCOUNT_FIRST  = "keyword_order_low_charcount_first";
-    
+    const FIFO = 'keyword_order_fifo';
+    const HIGH_WORDCOUNT_FIRST = 'keyword_order_high_wordcount_first';
+    const LOW_WORDCOUNT_FIRST = 'keyword_order_low_wordcount_first';
+    const HIGH_CHARCOUNT_FIRST = 'keyword_order_high_charcount_first';
+    const LOW_CHARCOUNT_FIRST = 'keyword_order_low_charcount_first';
     /**
      * Returns all enumeration values
      *
@@ -27,7 +26,6 @@ final class KeywordOrder
         $reflectionClass = new \ReflectionClass(static::class);
         return $reflectionClass->getConstants();
     }
-
     /**
      * Translate enum to natural language
      *
@@ -38,16 +36,16 @@ final class KeywordOrder
     public static function translate($value)
     {
         switch ($value) {
-        case self::FIFO:
-            return __('First configured keyword gets linked first', 'internal-links');
-        case self::HIGH_WORDCOUNT_FIRST:
-            return __('Highest word count gets linked first', 'internal-links');
-        case self::LOW_WORDCOUNT_FIRST:
-            return __('Lowest word count gets linked first', 'internal-links');
-        case self::HIGH_CHARCOUNT_FIRST:
-            return __('Highest character count gets linked first', 'internal-links');
-        case self::LOW_CHARCOUNT_FIRST:
-            return __('Lowest character count gets linked first', 'internal-links');
+            case self::FIFO:
+                return __('First configured keyword gets linked first', 'internal-links');
+            case self::HIGH_WORDCOUNT_FIRST:
+                return __('Highest word count gets linked first', 'internal-links');
+            case self::LOW_WORDCOUNT_FIRST:
+                return __('Lowest word count gets linked first', 'internal-links');
+            case self::HIGH_CHARCOUNT_FIRST:
+                return __('Highest character count gets linked first', 'internal-links');
+            case self::LOW_CHARCOUNT_FIRST:
+                return __('Lowest character count gets linked first', 'internal-links');
         }
         return 'N/A';
     }

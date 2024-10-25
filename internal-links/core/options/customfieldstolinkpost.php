@@ -2,101 +2,138 @@
 
 namespace ILJ\Core\Options;
 
-use  ILJ\Helper\Options as OptionsHelper ;
-use  ILJ\Core\Options ;
-use  ILJ\Helper\IndexAsset ;
+use ILJ\Helper\Options as OptionsHelper;
+use ILJ\Core\Options as Options;
+use ILJ\Helper\IndexAsset;
 /**
  * Option: List of Post Custom Fields used for limiting links
  *
- * @since   2.1.0
  * @package ILJ\Core\Options
+ * @since   2.1.0
  */
-class CustomFieldsToLinkPost extends AbstractOption
+class CustomFieldsToLinkPost extends Custom_Fields_Option
 {
-    const  ILJ_ACF_HINT_FILTER_POST = "ilj_hint_for_acf_post" ;
-    const  ILJ_ACTION_ADD_PRO_FEATURES = "ilj_add_pro_features" ;
+    const ILJ_ACF_HINT_FILTER_POST = 'ilj_hint_for_acf_post';
+    const ILJ_ACTION_ADD_PRO_FEATURES = 'ilj_add_pro_features';
     /**
-     * @inheritdoc
+     * Get the unique identifier for the option
+     *
+     * @return string
      */
     public static function getKey()
     {
         return self::ILJ_OPTIONS_PREFIX . 'custom_fields_to_link_post';
     }
-    
     /**
-     * @inheritdoc
+     * Get the default value of the option
+     *
+     * @return mixed
      */
     public static function getDefault()
     {
-        return [];
+        return array();
     }
-    
     /**
-     * @inheritdoc
+     * Identifies if the current option is pro only
+     *
+     * @return bool
      */
     public static function isPro()
     {
         return true;
     }
-    
     /**
-     * @inheritdoc
+     * Adds the option to an option group
+     *
+     * @param  string $option_group The option group to which the option gets connected
+     * @return void
      */
-    public function register( $option_group )
+    public function register($option_group)
     {
-        return;
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend label for the option
+     *
+     * @return string
      */
     public function getTitle()
     {
-        return __( 'Custom fields of posts that get used for linking', 'internal-links' );
+        return __('Custom fields of posts that get used for linking', 'internal-links');
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend description for the option
+     *
+     * @return string
      */
     public function getDescription()
     {
-        return __( 'This is a list of post custom fields that should be used for automatic linking.<br>Leave empty to not link any custom fields.', 'internal-links' );
+        return __('This is a list of post custom fields that should be used for automatic linking.<br>Leave empty to not link any custom fields.', 'internal-links');
     }
-    
     /**
-     * @inheritdoc
+     * Outputs the options form element for backend administration
+     *
+     * @param  mixed $value
+     * @return mixed
      */
-    public function renderField( $value )
+    public function renderField($value)
     {
-        if ( $value == "" ) {
-            $value = [];
+        if ('' == $value) {
+            $value = array();
         }
-        $custom_fields = [];
-        echo  '<select name="' . self::getKey() . '[]" id="' . self::getKey() . '" multiple="multiple"' . OptionsHelper::getDisabler( $this ) . '>' ;
-        if ( count( $custom_fields ) ) {
-            foreach ( $custom_fields as $custom_field ) {
-                echo  '<option value="' . $custom_field->meta_key . '"' . (( in_array( $custom_field->meta_key, $value ) ? ' selected' : '' )) . '>' . $custom_field->meta_key . '</option>' ;
+        $custom_fields = array();
+        $key = self::getKey();
+        ?>
+		<select name="<?php 
+        echo esc_attr($key);
+        ?>[]" id="<?php 
+        echo esc_attr($key);
+        ?>" multiple="multiple" <?php 
+        OptionsHelper::render_disabler($this);
+        ?>>
+		<?php 
+        if (count($custom_fields)) {
+            ?>
+			<?php 
+            foreach ($custom_fields as $custom_field) {
+                ?>
+			<option value="<?php 
+                echo esc_attr($custom_field->meta_key);
+                ?>" <?php 
+                selected(in_array($custom_field->meta_key, $value));
+                ?>><?php 
+                echo esc_html($custom_field->meta_key);
+                ?></option>
+			<?php 
             }
+            ?>
+		<?php 
         }
-        echo  '</select>' ;
+        ?>
+		<?php 
+        $this->render_saved_regex_options($value);
+        ?>
+		</select>
+		<?php 
     }
-    
     /**
-     * @inheritdoc
+     * Checks if a value is a valid value for option
+     *
+     * @param  mixed $value The value that gets validated
+     * @return bool
      */
-    public function isValidValue( $value )
+    public function isValidValue($value)
     {
         return false;
     }
-    
     /**
-     * @inheritdoc
+     * Returns a hint text for the option, if given
+     *
+     * @return string
      */
     public function getHint()
     {
-        $hint = "";
-        $hint = apply_filters( self::ILJ_ACF_HINT_FILTER_POST, $hint );
+        $hint = '';
+        $hint = apply_filters(self::ILJ_ACF_HINT_FILTER_POST, $hint);
         return $hint;
     }
-
 }

@@ -1,13 +1,13 @@
 === Internal Link Juicer: SEO Auto Linker for WordPress ===
-Contributors: internallinkjuicer, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua, freemius
+Contributors: internallinkjuicer, DavidAnderson, pmbaldha, DNutbourne, aporter, bcrodua
 Donate link: https://www.internallinkjuicer.com/
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl.html
 Tags: seo, internal links, automatic linking, linkbuilding, onpage, auto linker, ux, link, links
 Requires at least: 5.9.0
-Tested up to: 6.3
+Tested up to: 6.7
 Requires PHP: 7.1.0
-Stable tag: 2.23.4
+Stable tag: 2.24.5
 
 Improve your SEO and your user experience through internal linkbuilding. Automated links between your posts based on a smart keyword configuration.
 
@@ -129,6 +129,96 @@ The Pro version also provides a direct import of __post (and term) titles__ or, 
 
 == Changelog ==
 
+= 2.24.5 - 23/Oct/2024 =
+
+* COMPATIBILITY: Replace deprecated jQuery 3 code with new code.
+* COMPATIBILITY: Update Freemius SDK to version 2.8.1.
+* COMPATIBILITY: Updated jQuery initialization to use the shorthand `$(function() { ... });` instead of the deprecated `jQuery(document).ready(function() { ... });`.
+* FEATURE: Added option to enable and disable content caching for Internal link juicer.
+* FEATURE: Implement pagination for link statistics.
+* FIX: Fixed an issue when rating notification can't be hidden when "Hide the linkindex indicator from WordPress admin bar" is turned on.
+* FIX: Fixed issue where the function required a string type argument. The fix now allows mixed data types to be passed to link_content to accommodate different types of content.
+* FIX: Implement database collation fix tool, to fix mixed collation.
+* FIX: Prevent negative numbers from being set as values in Internal link juicer setting options.
+* FIX: Prevent removing of line breaks when limit links per paragraph option is turned on.
+* FIX: View category or term link was broken in Internal Links > Dashboard > Statistics > Link statistics.
+* FIX: Resolve timeout issue with `the_content` hook when handling large content.
+* FIX: Resolved an error with the edit screen on Oxygen Builder for missing ilj_ajax_object.
+* FIX: The rebuild index button was not working when the hide the linkindex indicator from WordPress admin bar was enabled.
+* FIX: The upgrade page was not working in a specific situation.
+* FIX: Prevented PHP notices related to improper use of the wpdb::prepare() function by ensuring placeholders are used correctly in SQL queries.
+* PERFORMANCE: Modify the anchor text statistics pagination behaviour to decrease load time. Now it works with search input after pressing enter.
+
+= 2.24.4 - 10/July/2024 =
+
+* SECURITY: Fixed Cross Site Request Forgery for "ilj_rebuild_index" and "ilj_render_batch_info".
+* FEATURE: Implement pagination for link statistics.
+* FEATURE: Link Preview for generated links.
+* FIX: Resolve timeout issue with `the_content` hook when handling large content.
+* TWEAK: Show premium options in ILJ editor for the free version.
+* TWEAK: UI/UX changes in settings page.
+
+= 2.24.3 - 15/May/2024 =
+* FEATURE: Custom fields now have support for wildcard field names.
+* FEATURE: Keywords editor for posts and terms.
+* FIX: Fix Muffin Builder Compatibility issue.
+* FIX: Fix issues with creating linkindex table in multisite setup.
+* FIX: Prevent fatal error when whitelist of post types is empty in premium version.
+* FIX: Resolved a bug related to the global blacklist functionality, ensuring that links are no longer generated to blacklisted posts/terms.
+* FIX: Fixed issue with contents not properly rendering.
+* FIX: Page title links on dashboard statistics not loading the page when clicked.
+* TRANSLATIONS: Split sentences to make one sentence in any  translation functions
+* TWEAK: Added non minified js and css files to distributed version.
+* TWEAK: Added sourcemaps and polyfills to plugin scripts.
+* TWEAK: Avoid PHP errors on rebuild process when post/terms are empty.
+* TWEAK: Implemented output escaping to address WordPress.Security.EscapeOutput.OutputNotEscaped warnings.
+* TWEAK: Added checks if content needs applying link building filter or not to lessen processing time.
+* TWEAK: Update Premium code blocks.
+* TWEAK: Update action scheduler to version 3.7.4.
+* TWEAK: Freemius SDK update to 2.7.2
+
+= 2.23.6 - 13/Feb/2024 =
+* FIX: Fixed issue with contents not properly rendering.
+
+= 2.23.5 - 25/Jan/2024 =
+
+* FEATURE: Add a cancel all scheduled actions button.
+* FEATURE: Add delete cache button to delete transient cache. 
+* FEATURE: Add global option for limit incoming links. 
+* FEATURE: Allow keywords to be imported from tags. 
+* FEATURE: Case Sensitive Mode for keywords. 
+* FEATURE: Show the ILJ keyword setting box to add category screen. 
+* FEATURE: added a setting to select the action scheduler batch size 
+* FEATURE: added new columns to export: element sub-type (page/post/product/etc), incoming and outgoing link counts 
+* FIX: Implemented fix for term keywords to adhere to the "Order for configured keywords while linking" preference. This change ensures that keywords will be linked in the specified order. 
+* FIX: Fix bug on limit linking within their terms option that allows linking to other page that does not have the same term. 
+* FIX: Fix admin bar link vanishes when index mode is reset to automatic.
+* FIX: Fix links not generating when WPML plugin is activated. 
+* FIX: Fix namespace for cloudflare to avoid PHP errors. 
+* FIX: Fixed an issue with Limit outgoing links option value not saving in category or terms 
+* FIX: avoid cancelled requests caused by Cloudflare's hard execution time limit of 100 seconds 
+* FIX: Resolve issue with index build not continuing when a whitelist option is empty
+* FIX: When debug mode was on and the ILJ keywords were exported, a warning and a notice appeared in the exported CSV file. 
+* FIX: Fix browser console error in settings page for undefined variable when index generation mode is none
+* FIX: refactor table creation for MySQL 8 compatibility
+* FIX: add dynamic properties to remove E_DEPRECATED messages
+* TWEAK: show always the build index button so user can just click it instead of having to edit/add pages/terms/etc 
+* TWEAK: Avoid PHP deprecated warning on null strtolower function. 
+* TWEAK: Implemented a dismissable notice when site is running on a LiteSpeed Webserver. 
+* TWEAK: Remove duplicated time measuring code by creating a Stopwatch helper method
+* TWEAK: The blacklist field now displays the title beside id. 
+* PERFORMANCE: Fetch dashboard link statistics table by batch to avoid timeouts and memory exhaust. 
+* PERFORMANCE: Reduced mysql calls in rendering the ILJ dashboard. 
+* PERFORMANCE: Refactor regex for increased performance and reliability 
+* PERFORMANCE: refactor configured keywords count to be resource savvy and cache it in database for faster access
+* PERFORMANCE: Implemented WP Transient for faster frontend load time.
+* PERFORMANCE: Reduced data being fetched by IndexAsset::getTerms__premium_only() to term_id and description only to improve performance.
+* COMPATIBILITY: Fixed an issue related to get_class() method not compatible with 8.3 
+* COMPATIBILITY: add new filters for the WooCommerce and Elementor plugins 
+* COMPATIBILITY: add missing dynamic properties for PHP 8.2 compatibility
+* SECURITY: Fixed Stored Cross-Site Scripting Vulnerabilities in the admin dashboard setting page. 
+* SECURITY: Fixed Stored Cross-Site Scripting Vulnerabilities in the keywords metabox and customlinks page.
+
 = 2.23.4 - 16/Aug/2023 =
 
 * OWNERSHIP: Internal Link Juicer is now owned and maintained by Team Updraft - https://teamupdraft.com
@@ -181,4 +271,7 @@ Release Date: December 2nd, 2022
 = Earlier versions =
 
 For the complete changelog, please refer to [https://www.internallinkjuicer.com/changelog/](https://www.internallinkjuicer.com/changelog/).
+
+== Upgrade Notice ==
+* 2.24.5: Various features, like a new option to enable and disable content caching and implemented pagination for link statistics. Various compatibilities, tweaks, and fixes. See the changelog for full details. A recommended update for all.
 

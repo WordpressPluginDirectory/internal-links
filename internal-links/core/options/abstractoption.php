@@ -1,4 +1,5 @@
 <?php
+
 namespace ILJ\Core\Options;
 
 /**
@@ -12,34 +13,39 @@ namespace ILJ\Core\Options;
  */
 abstract class AbstractOption implements OptionInterface
 {
-    const ILJ_OPTIONS_PREFIX = "ilj_settings_field_";
-
+    const ILJ_OPTIONS_PREFIX = 'ilj_settings_field_';
     /**
-     * @inheritdoc
+     * Check if the option is pro
+     *
+     * @return void
      */
     public static function isPro()
     {
         return false;
     }
-
     /**
-     * @inheritdoc
+     * Adds the option to an option group
+     *
+     * @param  string $option_group The option group to which the option gets connected
+     * @return void
      */
     public function register($option_group)
     {
         register_setting($option_group, static::getKey());
     }
-
     /**
-     * @inheritdoc
+     * Get the option's description
+     *
+     * @return void
      */
     public function getDescription()
     {
         return '';
     }
-
     /**
-     * @inheritdoc
+     * Get the option's hint
+     *
+     * @return void
      */
     public function getHint()
     {

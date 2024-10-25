@@ -1,50 +1,41 @@
 <?php
+
 namespace ILJ\Helper;
 
 use ActionScheduler_Store;
 use ILJ\Backend\BatchInfo as BackendBatchInfo;
 use ILJ\Backend\Environment;
 use ILJ\Core\Options;
-
+use ILJ\Helper\Stopwatch;
 /**
  * Batch info helper
  *
  * Methods for handling batch building information
  *
- * @since   2.0.0
  * @package ILJ\Helper
+ * @since   2.0.0
  */
 class BatchInfo
 {
     const ILJ_ASYNC_GROUP = 'ilj_async_link_index';
-
-	const STATE_BUILDING = 'building';
-	const STATE_COMPLETED = 'completed';
-	const STATE_PROCESSING = 'processing';
-	const STATE_NO_BATCH_SCHEDULED = 'no_batch_scheduled';
-
-
+    const STATE_BUILDING = 'building';
+    const STATE_COMPLETED = 'completed';
+    const STATE_PROCESSING = 'processing';
+    const STATE_NO_BATCH_SCHEDULED = 'no_batch_scheduled';
     public $batch_counter;
     public $batch_finished;
     public $batch_build;
     public $batch_status;
-
-
     public function __construct()
     {
         $this->batch_build = Options::getOption(Options::ILJ_OPTION_KEY_BATCH);
-
-        if(is_array($this->batch_build) && !empty($this->batch_build)){
+        if (is_array($this->batch_build) && !empty($this->batch_build)) {
             $this->batch_counter = number_format((int) $this->batch_build['batch_build']['last_update']['batch_count']);
             $this->batch_finished = number_format((int) $this->batch_build['batch_build']['last_update']['batch_finished']);
-            $this->batch_status =  $this->batch_build['batch_build']['last_update']['status'];
+            $this->batch_status = $this->batch_build['batch_build']['last_update']['status'];
         }
-        
-
         $this->checkPendingAsyncAction();
-
     }
-
     /**
      * Get Batch Counter
      *
@@ -54,22 +45,20 @@ class BatchInfo
     {
         return $this->batch_counter;
     }
-
-	public static function translateBatchStatus($status)
-	{
-		switch($status) {
-			case self::STATE_COMPLETED:
-				return __('Build complete', 'internal-links');
-			case self::STATE_PROCESSING:
-			case self::STATE_BUILDING:
-				return __('Currently building...', 'internal-links');
-			case self::STATE_NO_BATCH_SCHEDULED:
-				return __('Nothing scheduled', 'internal-links');
-			default:
-				return __('Unknown', 'internal-links');
-		}
-	}
-
+    public static function translateBatchStatus($status)
+    {
+        switch ($status) {
+            case self::STATE_COMPLETED:
+                return __('Build complete', 'internal-links');
+            case self::STATE_PROCESSING:
+            case self::STATE_BUILDING:
+                return __('Currently building...', 'internal-links');
+            case self::STATE_NO_BATCH_SCHEDULED:
+                return __('Nothing scheduled', 'internal-links');
+            default:
+                return __('Unknown', 'internal-links');
+        }
+    }
     /**
      * Get Batch Finished value
      *
@@ -79,7 +68,6 @@ class BatchInfo
     {
         return $this->batch_finished;
     }
-
     /**
      * Generate the Batch Status
      *
@@ -90,22 +78,17 @@ class BatchInfo
     public function getBatchStatus($action = null)
     {
         $this->batch_status = self::STATE_BUILDING;
-
-        if(($this->batch_finished >= $this->batch_counter) && $this->batch_counter != 0) {
+        if ($this->batch_finished >= $this->batch_counter) {
             return $this->batch_status = self::STATE_COMPLETED;
         }
-
-        if($action == "calculating") {
+        if ('calculating' == $action) {
             return $this->batch_status = self::STATE_PROCESSING;
         }
-
-        if($this->batch_build == false) {
+        if (false == $this->batch_build) {
             return $this->batch_status = self::STATE_NO_BATCH_SCHEDULED;
         }
-
         return $this->batch_status;
     }
-
     /**
      * Calculates and returns the progress in percentage of the current batch queue
      *
@@ -113,19 +96,16 @@ class BatchInfo
      */
     public function getBatchPercentage()
     {
-
         $batch_percentage = 0;
-        if(!is_array($this->batch_build) && empty($this->batch_build)){
+        if (!is_array($this->batch_build) && empty($this->batch_build) || 0 == $this->batch_counter) {
             $batch_percentage = 100;
             return floor($batch_percentage);
         }
-        if (($this->batch_counter != 0 && $this->batch_finished != 0) && ($this->batch_counter != null && $this->batch_finished != null)) {
-            $batch_percentage = ( (int) $this->batch_finished / (int) $this->batch_counter ) * 100;
+        if (0 != $this->batch_counter && 0 != $this->batch_finished && (null != $this->batch_counter && null != $this->batch_finished)) {
+            $batch_percentage = (int) $this->batch_finished / (int) $this->batch_counter * 100;
         }
-
         return floor($batch_percentage);
     }
-
     /**
      * Fetch an array of Batch Info
      *
@@ -140,30 +120,24 @@ class BatchInfo
         $batch_finished = $this->getBatchFinished();
         $status = $this->getBatchStatus();
         $is_complete = false;
-        if($status == self::STATE_COMPLETED || $status == self::STATE_NO_BATCH_SCHEDULED){
+        if (self::STATE_COMPLETED == $status || self::STATE_NO_BATCH_SCHEDULED == $status) {
             $is_complete = true;
         }
-
         $batch_build_info['batch_percentage'] = $batch_percentage;
         $batch_build_info['batch_count'] = $batch_count;
         $batch_build_info['batch_finished'] = $batch_finished;
         $batch_build_info['status'] = self::translateBatchStatus($this->batch_status);
         $batch_build_info['progress'] = $batch_percentage;
         $batch_build_info['is_complete'] = $is_complete;
-
         $linkindex_info = Environment::get('linkindex');
-
-        $hours   = (int) get_option('gmt_offset');
-        $minutes = ($hours - floor($hours)) * 60;
         if (!is_null($linkindex_info) && is_object($linkindex_info)) {
-            $date = $linkindex_info['last_update']['date']->setTimezone(new \DateTimeZone(sprintf('%+03d:%02d', $hours, $minutes)));
+            $date = $linkindex_info['last_update']['date']->setTimezone(Stopwatch::timezone());
             $batch_build_info['linkindex_count'] = number_format($linkindex_info['last_update']['entries']);
-            $batch_build_info['keywords_count'] = number_format(Statistic::getConfiguredKeywordsCount());
+            $batch_build_info['keywords_count'] = number_format(Statistic::get_all_configured_keywords_count());
             $batch_build_info['last_built'] = $date->format(get_option('date_format')) . ' ' . __('at', 'internal-links') . ' ' . $date->format(get_option('time_format'));
         }
         return $batch_build_info;
     }
-
     /**
      * Set Current Batch Counter value
      *
@@ -174,7 +148,6 @@ class BatchInfo
     {
         $this->batch_counter = $batch_counter;
     }
-
     /**
      * Reset the Batch Finished Counter
      *
@@ -184,7 +157,6 @@ class BatchInfo
     {
         $this->batch_finished = 0;
     }
-
     /**
      * Increments the current batch counter by 1
      *
@@ -192,15 +164,12 @@ class BatchInfo
      */
     public function incrementBatchCounter()
     {
-        
-        if((strtolower($this->batch_status) == self::STATE_COMPLETED)) {
+        if (isset($this->batch_status) && strtolower($this->batch_status) == self::STATE_COMPLETED) {
             $this->resetBatchedFinished();
             $this->batch_counter = 0;
         }
         return (int) $this->batch_counter++;
-
     }
-
     /**
      * Increments the current Batch Finish counter by 1
      *
@@ -209,40 +178,24 @@ class BatchInfo
      */
     public function incrementBatchFinished()
     {
-        if($this->batch_finished >= $this->batch_counter) {
+        if ($this->batch_finished >= $this->batch_counter) {
             return;
         }
         return (int) $this->batch_finished++;
     }
-
     /**
      * Updating Batch Info
      *
      * @since  2.0.0
-     * @param  mixed $batch_count
      * @param  mixed $action
      * @return bool
      */
     public function updateBatchBuildInfo($action = null)
     {
-        $offset  = get_option('gmt_offset');
-        $hours   = (int) $offset;
-        $minutes = ($offset - floor($offset)) * 60;
-
         $status = $this->getBatchStatus($action);
-
-        $feedback = [
-            "last_update" => [
-                "batch_count" => $this->batch_counter,
-                "batch_finished" => $this->batch_finished,
-                "last_update" => new \DateTime('now', new \DateTimeZone(sprintf('%+03d:%02d', $hours, $minutes))),
-                "status" => $status,
-            ]
-        ];
-
+        $feedback = array("last_update" => array("batch_count" => $this->batch_counter, "batch_finished" => $this->batch_finished, "last_update" => Stopwatch::timestamp(), "status" => $status));
         return BackendBatchInfo::update('batch_build', $feedback);
     }
-
     /**
      * Checks Pending Async Actions and auto corrects if Batch Info fails to render correctly
      * Prevents wrong batch info details
@@ -253,47 +206,24 @@ class BatchInfo
     public function checkPendingAsyncAction()
     {
         $pending_actions = 0;
-
-        $args = array(
-            'status'     => ActionScheduler_Store::STATUS_PENDING,
-            'group'      => self::ILJ_ASYNC_GROUP,
-        );
+        $args = array('status' => ActionScheduler_Store::STATUS_PENDING, 'group' => self::ILJ_ASYNC_GROUP);
         $pending_actions += count(as_get_scheduled_actions($args));
-
-        $args = array(
-            'status'     => ActionScheduler_Store::STATUS_RUNNING,
-            'group'      => self::ILJ_ASYNC_GROUP,
-        );
+        $args = array('status' => ActionScheduler_Store::STATUS_RUNNING, 'group' => self::ILJ_ASYNC_GROUP);
         $pending_actions += count(as_get_scheduled_actions($args));
-
-        if(($pending_actions == 0) && $this->batch_finished != $this->batch_counter) {
-            //Auto correction for Batch info
+        if (0 == $pending_actions && $this->batch_finished != $this->batch_counter) {
+            // Auto correction for Batch info
             $this->batch_finished = $this->batch_counter;
             $this->updateBatchBuildInfo();
         }
     }
-
-    
     /**
      * Resets the batch info data
      *
      * @return void
      */
-    public static function reset_batch_info() {
-        $offset  = get_option('gmt_offset');
-        $hours   = (int) $offset;
-        $minutes = ($offset - floor($offset)) * 60;
-
-        $feedback = [
-            "last_update" => [
-                "batch_count" => 1,
-                "batch_finished" => 1,
-                "last_update" => new \DateTime('now', new \DateTimeZone(sprintf('%+03d:%02d', $hours, $minutes))),
-                "status" => self::STATE_COMPLETED,
-            ]
-        ];
-
+    public static function reset_batch_info()
+    {
+        $feedback = array("last_update" => array("batch_count" => 1, "batch_finished" => 1, "last_update" => Stopwatch::timestamp(), "status" => self::STATE_COMPLETED));
         return BackendBatchInfo::update('batch_build', $feedback);
     }
-    
 }

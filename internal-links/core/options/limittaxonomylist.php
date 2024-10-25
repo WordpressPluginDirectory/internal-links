@@ -2,63 +2,69 @@
 
 namespace ILJ\Core\Options;
 
-use  ILJ\Helper\Options as OptionsHelper ;
+use ILJ\Helper\Options as OptionsHelper;
 /**
  * Option: List of taxonomies used for limiting links
  *
- * @since   1.2.14
  * @package ILJ\Core\Options
+ * @since   1.2.14
  */
 class LimitTaxonomyList extends AbstractOption
 {
     /**
-     * @inheritdoc
+     * Get the unique identifier for the option
+     *
+     * @return string
      */
     public static function getKey()
     {
         return self::ILJ_OPTIONS_PREFIX . 'limit_taxonomy_list';
     }
-    
     /**
-     * @inheritdoc
+     * Get the default value of the option
+     *
+     * @return mixed
      */
     public static function getDefault()
     {
-        return [];
+        return array();
     }
-    
     /**
-     * @inheritdoc
+     * Identifies if the current option is pro only
+     *
+     * @return bool
      */
     public static function isPro()
     {
         return true;
     }
-    
     /**
-     * @inheritdoc
+     * Adds the option to an option group
+     *
+     * @param  string $option_group The option group to which the option gets connected
+     * @return void
      */
-    public function register( $option_group )
+    public function register($option_group)
     {
-        return;
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend label for the option
+     *
+     * @return string
      */
     public function getTitle()
     {
-        return __( 'Taxonomies, that limit linking within their terms', 'internal-links' );
+        return __('Taxonomies, that limit linking within their terms', 'internal-links');
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend description for the option
+     *
+     * @return string
      */
     public function getDescription()
     {
-        return __( 'Articles within these hierarchical taxonomies link only to articles who have the same category term.', 'internal-links' );
+        return __('Articles within these hierarchical taxonomies link only to articles who have the same category term.', 'internal-links');
     }
-    
     /**
      * Gets all taxonomy types that can be used with the plugin
      *
@@ -67,46 +73,65 @@ class LimitTaxonomyList extends AbstractOption
      */
     public static function getTaxonomyTypes()
     {
-        $taxonomy_types_default = get_taxonomies( [
-            'hierarchical' => true,
-            'public'       => true,
-            'show_ui'      => true,
-        ], 'objects', 'and' );
-        $taxonomy_types_public = get_taxonomies( [
-            'hierarchical' => true,
-            'public'       => true,
-            '_builtin'     => false,
-        ], 'objects', 'and' );
-        $taxonomies = array_merge( $taxonomy_types_default, $taxonomy_types_public );
-        return array_values( $taxonomies );
+        $taxonomy_types_default = get_taxonomies(array('hierarchical' => true, 'public' => true, 'show_ui' => true), 'objects', 'and');
+        $taxonomy_types_public = get_taxonomies(array('hierarchical' => true, 'public' => true, '_builtin' => false), 'objects', 'and');
+        $taxonomies = array_merge($taxonomy_types_default, $taxonomy_types_public);
+        return array_values($taxonomies);
     }
-    
     /**
-     * @inheritdoc
+     * Outputs the options form element for backend administration
+     *
+     * @param  mixed $value
+     * @return mixed
      */
-    public function renderField( $value )
+    public function renderField($value)
     {
-        if ( $value == "" ) {
-            $value = [];
+        if ('' == $value) {
+            $value = array();
         }
         $taxonomies = $this->getTaxonomyTypes();
-        
-        if ( count( $taxonomies ) ) {
-            echo  '<select name="' . self::getKey() . '[]" id="' . self::getKey() . '" multiple="multiple"' . OptionsHelper::getDisabler( $this ) . '>' ;
-            foreach ( $taxonomies as $taxonomy ) {
-                echo  '<option value="' . $taxonomy->name . '"' . (( in_array( $taxonomy->name, $value ) ? ' selected' : '' )) . '>' . $taxonomy->label . '</option>' ;
+        $key = self::getKey();
+        if (count($taxonomies)) {
+            ?>
+			<select
+				name="<?php 
+            echo esc_attr($key);
+            ?>[]"
+				id="<?php 
+            echo esc_attr($key);
+            ?>"
+				multiple="multiple"
+				<?php 
+            OptionsHelper::render_disabler($this);
+            ?>
+			>
+				<?php 
+            foreach ($taxonomies as $taxonomy) {
+                ?>
+					<option value="<?php 
+                echo esc_attr($taxonomy->name);
+                ?>" <?php 
+                selected(in_array($taxonomy->name, $value));
+                ?>>
+						<?php 
+                echo esc_html($taxonomy->label);
+                ?>
+					</option>
+				<?php 
             }
-            echo  '</select>' ;
+            ?>
+			</select>
+			<?php 
         }
-    
     }
-    
     /**
-     * @inheritdoc
+     * Checks if a value is a valid value for option
+     *
+     * @param  mixed $value The value that gets validated
+     * @return bool
      */
-    public function isValidValue( $value )
+    public function isValidValue($value)
     {
         return false;
     }
-
 }

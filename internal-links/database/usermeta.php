@@ -3,7 +3,6 @@
 namespace ILJ\Database;
 
 use ILJ\Backend\User;
-
 /**
  * Usermeta wrapper
  *
@@ -22,6 +21,6 @@ class Usermeta
     {
         global $wpdb;
         $meta_key = User::ILJ_META_USER;
-        return $wpdb->delete($wpdb->usermeta, array( 'meta_key' => $meta_key ));
+        return $wpdb->delete($wpdb->usermeta, array('meta_key' => $meta_key));
     }
 }

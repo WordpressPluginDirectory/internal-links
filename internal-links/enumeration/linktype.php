@@ -1,4 +1,5 @@
 <?php
+
 namespace ILJ\Enumeration;
 
 /**
@@ -9,6 +10,6 @@ namespace ILJ\Enumeration;
  */
 final class LinkType
 {
-    const OUTGOING  = "outgoing";
-    const INCOMING  = "incoming";
-}   
+    const OUTGOING = 'outgoing';
+    const INCOMING = 'incoming';
+}

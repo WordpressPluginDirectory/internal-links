@@ -1,20 +1,31 @@
+/*!
+ * tipso - A Lightweight Responsive jQuery Tooltip Plugin v1.0.8
+ * Copyright (c) 2014-2015 Bojan Petkovski
+ * http://tipso.object505.com
+ * Licensed under the MIT license
+ * http://object505.mit-license.org/
+ */
+ // CommonJS, AMD or browser globals
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
+        // AMD. Register as an anonymous module.
         define(['jquery'], factory);
     } else if (typeof exports === 'object') {
+        // Node/CommonJS
         module.exports = factory(require('jquery'));
     } else {
+        // Browser globals
         factory(jQuery);
     }
 }(function($) {
   var pluginName = "iljtipso",
     defaults = {
-      speed             : 400,          
+      speed             : 400,          //Animation speed
       background        : '#55b555',
       titleBackground   : '#333333',
       color             : '#ffffff',
       titleColor        : '#ffffff',
-      titleContent      : '',           
+      titleContent      : '',           //Content of the title bar
       showArrow         : true,
       position          : 'top',
       width             : 200,
@@ -30,9 +41,9 @@
       content           : null,
       ajaxContentUrl    : null,
       ajaxContentBuffer : 0,
-      contentElementId  : null,         
-      useTitle          : false,        
-      templateEngineFunc: null,         
+      contentElementId  : null,         //Normally used for picking template scripts
+      useTitle          : false,        //Use the title tag as tooptip or not
+      templateEngineFunc: null,         //A function that compiles and renders the content
       onBeforeShow      : null,
       onShow            : null,
       onHide            : null
@@ -45,6 +56,11 @@
     this.win = $(window);
     this.settings = $.extend({}, defaults, options);
 
+    /*
+     * Process and add data-attrs to settings as well for ease of use. Also, if
+     * data-iljtipso is an object then use it as extra settings and if it's not
+     * then use it as a title.
+     */
     if (typeof(this.$element.data("iljtipso")) === "object")
     {
       $.extend(this.settings, this.$element.data("iljtipso"));
@@ -59,9 +75,13 @@
       {
         continue;
       }
+      //lowercase first letter
       key = key.charAt(0).toLowerCase() + key.slice(1);
       data_attrs[key] = this.$element.data(data_keys[i]);
 
+      //We cannot use extend for data_attrs because they are automatically
+      //lowercased. We need to do this manually and extend this.settings with
+      //data_attrs
       for (var settings_key in this.settings)
       {
         if (settings_key.toLowerCase() == key)
@@ -77,6 +97,9 @@
     this.mode = 'hide';
     this.ieFade = !supportsTransitions;
 
+    //By keeping the original preferred position and repositioning by calling
+    //the reposition function we can make for more smart and easier positioning
+    //in complex scenarios!
     this.settings.preferedPosition = this.settings.position;
 
     this.init();
@@ -116,8 +139,7 @@
               waitForHover = setTimeout(function(){
                 obj.hide();
               }, 200);
-            })
-        ;
+            });
         });
       } else {
         $e.on('mouseover' + '.' + pluginName, function() {
@@ -153,7 +175,7 @@
       }
 
       if (obj.mode === 'hide') {
-        if ($.isFunction(obj.settings.onBeforeShow)) {
+        if ("function" === typeof obj.settings.onBeforeShow) {
           obj.settings.onBeforeShow(obj.$element, obj.element, obj);
         }
         if (obj.settings.size) {
@@ -198,7 +220,7 @@
             iljtipso_bubble.appendTo('body').stop(true, true).fadeIn(obj.settings
             .speed, function() {
               obj.mode = 'show';
-              if ($.isFunction(obj.settings.onShow)) {
+              if ("function" === typeof obj.settings.onShow) {
                 obj.settings.onShow(obj.$element, obj.element, obj);
               }
             });
@@ -213,7 +235,7 @@
                 $(this).removeClass('animated ' + obj.settings.animationIn);
               });
               obj.mode = 'show';
-              if ($.isFunction(obj.settings.onShow)) {
+              if ("function" === typeof obj.settings.onShow) {
                 obj.settings.onShow(obj.$element, obj.element, obj);
               }
               $win.off('resize' + '.' + pluginName, null, 'iljtipsoResizeHandler');
@@ -241,7 +263,7 @@
             iljtipso_bubble.stop(true, true).fadeOut(obj.settings.speed,
             function() {
               $(this).remove();
-              if ($.isFunction(obj.settings.onHide) && obj.mode === 'show') {
+              if ("function" === typeof obj.settings.onHide && obj.mode === 'show') {
                 obj.settings.onHide(obj.$element, obj.element, obj);
               }
               obj.mode = 'hide';
@@ -254,7 +276,7 @@
             .addClass('animated ' + obj.settings.animationOut)
             .one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', function(){
               $(this).removeClass('animated ' + obj.settings.animationOut).remove();
-              if ($.isFunction(obj.settings.onHide) && obj.mode === 'show') {
+              if ("function" === typeof obj.settings.onHide && obj.mode === 'show') {
                 obj.settings.onHide(obj.$element, obj.element, obj);
               }
               obj.mode = 'hide';
@@ -336,6 +358,7 @@
         }
         else
         {
+          // Only use data-iljtipso as content if it's not being used for settings
           if (typeof($e.data("iljtipso")) === "string")
           {
             content = $e.data('iljtipso');
@@ -374,9 +397,9 @@
   var supportsTransitions = (function() {
     var s = document.createElement('p').style,
         v = ['ms','O','Moz','Webkit'];
-    if( s['transition'] === '' ) return true;
-    while( v.length )
-        if( v.pop() + 'Transition' in s )
+    if(s['transition'] === '') return true;
+    while(v.length)
+        if(v.pop() + 'Transition' in s)
             return true;
     return false;
   })();
@@ -424,6 +447,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("bottom_right_corner");
           iljtipso_bubble.find(".iljtipso_title").addClass("bottom_right_corner");
@@ -443,6 +469,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("top_right_corner");
           iljtipso_bubble.find('.iljtipso_arrow').css({
@@ -471,6 +500,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("bottom_left_corner");
           iljtipso_bubble.find(".iljtipso_title").addClass("bottom_left_corner");
@@ -490,6 +522,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("top_left_corner");
           iljtipso_bubble.find('.iljtipso_arrow').css({
@@ -501,6 +536,9 @@
         }
         break;
 
+      /*
+       * Bottom right position
+       */
       case 'bottom-right':
        pos_left = $e.offset().left + ($e.outerWidth());
        pos_top = $e.offset().top + $e.outerHeight() + arrow;
@@ -519,6 +557,9 @@
            'border-right-color': 'transparent'
          });
 
+         /*
+          * Hide and show the appropriate rounded corners
+          */
          removeCornerClasses(iljtipso_bubble);
          iljtipso_bubble.addClass("top_right_corner");
          iljtipso_bubble.find(".iljtipso_title").addClass("top_left_corner");
@@ -538,6 +579,9 @@
            'border-right-color': 'transparent'
          });
 
+         /*
+          * Hide and show the appropriate rounded corners
+          */
          removeCornerClasses(iljtipso_bubble);
          iljtipso_bubble.addClass("bottom_right_corner");
          iljtipso_bubble.find(".iljtipso_title").addClass("bottom_right_corner");
@@ -550,6 +594,9 @@
        }
        break;
 
+       /*
+        * Bottom left position
+        */
        case 'bottom-left':
         pos_left = $e.offset().left - (realHeight(iljtipso_bubble).width);
         pos_top = $e.offset().top + $e.outerHeight() + arrow;
@@ -568,6 +615,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("top_left_corner");
           iljtipso_bubble.find(".iljtipso_title").addClass("top_left_corner");
@@ -587,6 +637,9 @@
             'border-right-color': 'transparent'
           });
 
+          /*
+           * Hide and show the appropriate rounded corners
+           */
           removeCornerClasses(iljtipso_bubble);
           iljtipso_bubble.addClass("bottom_left_corner");
           iljtipso_bubble.find(".iljtipso_title").addClass("bottom_left_corner");
@@ -598,6 +651,9 @@
           iljtipso_bubble.addClass('bottom');
         }
         break;
+      /*
+       * Top position
+       */
       case 'top':
         pos_left = $e.offset().left + ($e.outerWidth() / 2) - (realHeight(iljtipso_bubble).width / 2);
         pos_top = $e.offset().top - realHeight(iljtipso_bubble).height - arrow;
@@ -725,6 +781,9 @@
         }
         break;
     }
+    /*
+     * Set the position of the arrow for the corner positions
+     */
     if (obj.settings.position === 'top-right')
     {
       iljtipso_bubble.find('.iljtipso_arrow').css({
@@ -755,6 +814,9 @@
       });
     }
 
+    /*
+     * Check out of boundness
+     */
     if (pos_left < $win.scrollLeft() && (obj.settings.position === 'bottom' || obj.settings.position === 'top'))
     {
       iljtipso_bubble.find('.iljtipso_arrow').css({
@@ -828,6 +890,9 @@
       }
     }
 
+    /*
+     * If out of bounds from the right hand side
+     */
     if (pos_left + obj.settings.width > $win.outerWidth() &&
        (obj.settings.position === 'left' ||
         obj.settings.position === 'right' ||
@@ -865,6 +930,9 @@
           'border-right-color': 'transparent'
         });
 
+        /*
+         * Hide and show the appropriate rounded corners
+         */
         removeCornerClasses(iljtipso_bubble);
         iljtipso_bubble.removeClass('top bottom left right');
         iljtipso_bubble.addClass('top');
@@ -891,6 +959,9 @@
       top: pos_top + obj.settings.offsetY
     });
 
+    // If positioned right or left and tooltip is out of bounds change position
+    // This position change will be temporary, because preferredPosition is there
+    // to help!!
     if (pos_top < $win.scrollTop() && (obj.settings.position === 'right' || obj.settings.position === 'left'))
     {
       $e.iljtipso('update', 'position', 'bottom');

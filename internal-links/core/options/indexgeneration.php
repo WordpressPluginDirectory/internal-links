@@ -2,91 +2,118 @@
 
 namespace ILJ\Core\Options;
 
-use  ILJ\Helper\Help ;
-use  ILJ\Enumeration\IndexMode ;
-use  ILJ\Helper\Options as OptionsHelper ;
+use ILJ\Helper\Help;
+use ILJ\Enumeration\IndexMode;
+use ILJ\Helper\Options as OptionsHelper;
 /**
  * Option: Index generation mode
  *
- * @since   1.1.3
  * @package ILJ\Core\Options
+ * @since   1.1.3
  */
 class IndexGeneration extends AbstractOption
 {
     /**
-     * @inheritdoc
+     * Get the unique identifier for the option
+     *
+     * @return string
      */
     public static function getKey()
     {
         return self::ILJ_OPTIONS_PREFIX . 'index_generation';
     }
-    
     /**
-     * @inheritdoc
+     * Get the default value of the option
+     *
+     * @return mixed
      */
     public static function getDefault()
     {
         return IndexMode::AUTOMATIC;
     }
-    
     /**
-     * @inheritdoc
+     * Identifies if the current option is pro only
+     *
+     * @return bool
      */
     public static function isPro()
     {
         return true;
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend label for the option
+     *
+     * @return string
      */
     public function getTitle()
     {
-        return __( 'Index generation mode', 'internal-links' );
+        return __('Index generation mode', 'internal-links');
     }
-    
     /**
-     * @inheritdoc
+     * Get the frontend description for the option
+     *
+     * @return string
      */
     public function getDescription()
     {
-        return __( 'Choose your preferred approach for generating the index.', 'internal-links' );
+        return __('Choose your preferred approach for generating the index.', 'internal-links');
     }
-    
     /**
-     * @inheritdoc
+     * Returns a hint text for the option, if given
+     *
+     * @return string
      */
     public function getHint()
     {
-        return '<ul class="description">' . '<li><p class="description"><code>' . __( 'None', 'internal-links' ) . '</code>: ' . __( 'The index is not created by the plugin (you should set up a cronjob). Read more in our', 'internal-links' ) . ' <a href="' . Help::getLinkUrl(
-            'index-generation-mode/',
-            'mode-none',
-            'index generation mode',
-            'settings'
-        ) . '" target="_blank" rel="noopener">' . __( 'manual', 'internal-links' ) . '</a>.</p></li>' . '<li><p class="description"><code>' . __( 'Automatic', 'internal-links' ) . '</code>: ' . __( 'Any change affecting the index automatically updates the index.', 'internal-links' ) . '</p></li>' . '</ul>';
+        return '<ul class="description">' . '<li><p class="description"><code>' . __('None', 'internal-links') . '</code>: ' . __('The index is not created by the plugin (you should set up a cronjob). Read more in our', 'internal-links') . ' <a href="' . Help::getLinkUrl('index-generation-mode/', 'mode-none', 'index generation mode', 'settings') . '" target="_blank" rel="noopener">' . __('manual', 'internal-links') . '</a>.</p></li>' . '<li><p class="description"><code>' . __('Automatic', 'internal-links') . '</code>: ' . __('Any change affecting the index automatically updates the index.', 'internal-links') . '</p></li>' . '</ul>';
     }
-    
     /**
-     * @inheritdoc
+     * Outputs the options form element for backend administration
+     *
+     * @param  mixed $value
+     * @return mixed
      */
-    public function renderField( $value )
+    public function renderField($value)
     {
         $value = self::getDefault();
-        if ( $value != IndexMode::NONE && $value != IndexMode::AUTOMATIC ) {
+        if (IndexMode::NONE != $value && IndexMode::AUTOMATIC != $value) {
             $value = self::getDefault();
         }
-        echo  '<select name="' . self::getKey() . '" id="' . self::getKey() . '"' . OptionsHelper::getDisabler( $this ) . '>' ;
-        echo  '<option value="' . IndexMode::NONE . '" ' . selected( $value, IndexMode::NONE ) . '>' . __( 'None', 'internal-links' ) . '</option>' ;
-        echo  '<option value="' . IndexMode::AUTOMATIC . '" ' . selected( $value, IndexMode::AUTOMATIC ) . '>' . __( 'Automatic', 'internal-links' ) . '</option>' ;
-        echo  '</select> ' . Help::getOptionsLink( 'index-generation-mode/', '', 'index generation mode' ) ;
+        $key = self::getKey();
+        ?>
+		<select name="<?php 
+        echo esc_attr($key);
+        ?>" id="<?php 
+        echo esc_attr($key);
+        ?>" <?php 
+        OptionsHelper::render_disabler($this);
+        ?>>
+			<option value="<?php 
+        echo esc_attr(IndexMode::NONE);
+        ?>" <?php 
+        selected($value, IndexMode::NONE);
+        ?>><?php 
+        esc_html_e('None', 'internal-links');
+        ?></option>
+			<option value="<?php 
+        echo esc_attr(IndexMode::AUTOMATIC);
+        ?>" <?php 
+        selected($value, IndexMode::AUTOMATIC);
+        ?>><?php 
+        esc_html_e('Automatic', 'internal-links');
+        ?></option>
+		</select>
+		<?php 
+        Help::render_options_link('index-generation-mode/', '', 'index generation mode');
     }
-    
     /**
-     * @inheritdoc
+     * Checks if a value is a valid value for option
+     *
+     * @param  mixed $value The value that gets validated
+     * @return bool
      */
-    public function isValidValue( $value )
+    public function isValidValue($value)
     {
         return false;
     }
-
 }

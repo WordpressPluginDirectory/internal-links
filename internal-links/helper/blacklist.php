@@ -2,11 +2,11 @@
 
 namespace ILJ\Helper;
 
-use  ILJ\Core\Options ;
+use ILJ\Core\Options;
 /**
  * Toolset for Blacklisting
  *
- * Methods for Blacklisting 
+ * Methods for Blacklisting
  *
  * @package ILJ\Helper
  * @since   1.2.15
@@ -19,16 +19,13 @@ class Blacklist
      * @param  string $type Check if Post/Term
      * @return array    $blacklistedList    List of Blacklisted Post/Terms
      */
-    public static function getBlacklistedList( $type )
+    public static function getBlacklistedList($type)
     {
-        
-        if ( $type == "post" ) {
-            $blacklistedList = Options::getOption( \ILJ\Core\Options\Blacklist::getKey() );
+        if ('post' == $type) {
+            $blacklistedList = Options::getOption(\ILJ\Core\Options\Blacklist::getKey());
             return $blacklistedList;
         }
-    
     }
-    
     /**
      * Get All Post Types that are Hierarchical , including custom post types
      *
@@ -36,28 +33,24 @@ class Blacklist
      */
     protected static function getHierarchicalPostTypes()
     {
-        $args = array(
-            'public'       => true,
-            'hierarchical' => true,
-        );
-        $post_types = array_keys( get_post_types( $args, 'names' ) );
+        $args = array('public' => true, 'hierarchical' => true);
+        $post_types = array_keys(get_post_types($args, 'names'));
         return $post_types;
     }
-    
     /**
      * Check if ID is Blacklisted
      *
      * @param  string $type Checks if Post/Term
      * @param  int    $id   ID to check
-     * @return bool               Returns True if blacklisted  
+     * @return bool               Returns True if blacklisted
      */
-    public static function checkIfBlacklisted( $type, $id )
+    public static function checkIfBlacklisted($type, $id)
     {
-        $list = self::getBlacklistedList( $type );
-        if ( $type == "post" ) {
-            if ( !empty($list) ) {
-                if ( in_array( $id, $list ) ) {
-                    if ( !empty($list) ) {
+        $list = self::getBlacklistedList($type);
+        if ('post' == $type) {
+            if (!empty($list)) {
+                if (in_array($id, $list)) {
+                    if (!empty($list)) {
                         return true;
                     }
                 }
@@ -65,5 +58,4 @@ class Blacklist
         }
         return false;
     }
-
 }

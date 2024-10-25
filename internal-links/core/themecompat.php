@@ -1,6 +1,7 @@
 <?php
 
 namespace ILJ\Core;
+
 /**
  * Compatibility handler
  *
@@ -12,7 +13,6 @@ namespace ILJ\Core;
  */
 class ThemeCompat
 {
-
     /**
      * Initializes the Compat module
      *
@@ -24,35 +24,31 @@ class ThemeCompat
     public static function init()
     {
         self::enableDivi();
-        define("ILJ_THEME_COMPAT", true);
+        define('ILJ_THEME_COMPAT', true);
     }
-
     /**
      * Responsible for loading Divi's ET Builder's code
+     *
      * @static
      * @since  1.3.10
      */
-    public static function enableDivi(){
-        
-        if(!defined("ET_BUILDER_THEME")){
+    public static function enableDivi()
+    {
+        if (!defined('ET_BUILDER_THEME')) {
             return;
         }
-
         $index_mode = Options::getOption(\ILJ\Core\Options\IndexGeneration::getKey());
-
-        if ($index_mode != \ILJ\Enumeration\IndexMode::NONE && $index_mode != \ILJ\Enumeration\IndexMode::AUTOMATIC) {
+        if (\ILJ\Enumeration\IndexMode::NONE != $index_mode && \ILJ\Enumeration\IndexMode::AUTOMATIC != $index_mode) {
             return;
         }
-
-        add_action( "builder_compat", function(){
-            if ( ! did_action( 'et_builder_ready' ) ) {
+        add_action('builder_compat', function () {
+            if (!did_action('et_builder_ready')) {
                 require_once get_template_directory() . '/includes/builder/' . 'framework.php';
                 require_once get_template_directory() . '/includes/builder/' . 'class-et-builder-value.php';
                 require_once get_template_directory() . '/includes/builder/' . 'ab-testing.php';
                 require_once get_template_directory() . '/includes/builder/' . 'class-et-builder-element.php';
                 require_once get_template_directory() . '/includes/builder/' . 'class-et-global-settings.php';
                 require_once get_template_directory() . '/includes/builder/' . 'class-et-builder-settings.php';
-
                 if (function_exists('et_builder_init_global_settings')) {
                     et_builder_init_global_settings();
                 }
@@ -63,8 +59,6 @@ class ThemeCompat
                     et_builder_settings_init();
                 }
             }
-
-        }, 10 
-        );
+        }, 10);
     }
 }

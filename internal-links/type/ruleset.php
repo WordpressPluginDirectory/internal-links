@@ -13,17 +13,19 @@ namespace ILJ\Type;
 class Ruleset
 {
     /**
+     * Ruleset
+     *
      * @var   int $ruleset
      * @since 1.0.0
      */
     public $ruleset = array();
-
     /**
+     * Ruleset pointer
+     *
      * @var   int $rule_pointer
      * @since 1.0.0
      */
     private $ruleset_pointer = 0;
-
     /**
      * Adds a new rule entry to the ruleset container.
      *
@@ -35,17 +37,16 @@ class Ruleset
      */
     public function addRule($pattern, $value, $type = '')
     {
-        if ($pattern != '' && $value != '') {
-            $rule            = new \stdClass();
-            $rule->pattern   = $pattern;
-            $rule->value     = $value;
-            $rule->type      = $type;
+        if ('' != $pattern && '' != $value) {
+            $rule = new \stdClass();
+            $rule->pattern = $pattern;
+            $rule->value = $value;
+            $rule->type = $type;
             $this->ruleset[] = $rule;
             return true;
         }
         return false;
     }
-
     /**
      * Checks if the container has elements left to iterate.
      *
@@ -56,7 +57,6 @@ class Ruleset
     {
         return isset($this->ruleset[$this->ruleset_pointer]);
     }
-
     /**
      * Returns the rule entry from a speficic index within the ruleset container.
      *
@@ -69,13 +69,12 @@ class Ruleset
         if (!is_numeric($index)) {
             return null;
         }
-        $index = ($index >= 0) ? $index : $this->ruleset_pointer;
+        $index = (0 <= $index) ? $index : $this->ruleset_pointer;
         if (isset($this->ruleset[$index])) {
             return $this->ruleset[$index];
         }
         return null;
     }
-
     /**
      * Increments the position of the ruleset_pointer
      *
@@ -86,7 +85,6 @@ class Ruleset
     {
         $this->ruleset_pointer++;
     }
-
     /**
      * Returns the count of entries in ruleset
      *
@@ -97,7 +95,6 @@ class Ruleset
     {
         return count($this->ruleset);
     }
-
     /**
      * Resets the ruleset pointer
      *

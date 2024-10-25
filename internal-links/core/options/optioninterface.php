@@ -1,4 +1,5 @@
 <?php
+
 namespace ILJ\Core\Options;
 
 /**
@@ -19,7 +20,6 @@ interface OptionInterface
      * @return string
      */
     public static function getKey();
-
     /**
      * Get the default value of the option
      *
@@ -27,7 +27,6 @@ interface OptionInterface
      * @return mixed
      */
     public static function getDefault();
-
     /**
      * Identifies if the current option is pro only
      *
@@ -35,7 +34,6 @@ interface OptionInterface
      * @return bool
      */
     public static function isPro();
-
     /**
      * Adds the option to an option group
      *
@@ -44,7 +42,6 @@ interface OptionInterface
      * @return void
      */
     public function register($option_group);
-
     /**
      * Get the frontend label for the option
      *
@@ -52,7 +49,6 @@ interface OptionInterface
      * @return string
      */
     public function getTitle();
-
     /**
      * Get the frontend description for the option
      *
@@ -60,16 +56,14 @@ interface OptionInterface
      * @return string
      */
     public function getDescription();
-
     /**
      * Outputs the options form element for backend administration
      *
      * @since  1.1.3
-     * @param  $value
+     * @param  mixed $value
      * @return mixed
      */
     public function renderField($value);
-
     /**
      * Returns a hint text for the option, if given
      *
@@ -77,7 +71,6 @@ interface OptionInterface
      * @return string
      */
     public function getHint();
-
     /**
      * Checks if a value is a valid value for option
      *

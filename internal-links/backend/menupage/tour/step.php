@@ -1,4 +1,5 @@
 <?php
+
 namespace ILJ\Backend\MenuPage\Tour;
 
 /**
@@ -11,13 +12,13 @@ namespace ILJ\Backend\MenuPage\Tour;
  */
 abstract class Step
 {
-
     /**
+     * Feature row counter
+     *
      * @var   int
      * @since 1.1.0
      */
     protected $feature_row_counter = 1;
-
     /**
      * Renders the content frame of the step
      *
@@ -27,7 +28,6 @@ abstract class Step
     public function renderContent()
     {
     }
-
     /**
      * Block for a feature row
      *
@@ -37,12 +37,31 @@ abstract class Step
      */
     protected function renderFeatureRow($data)
     {
-        echo '<div class="ilj-row substep">';
-        echo '<div class="counter">' . $this->feature_row_counter . '</div>';
-        echo '<div class="content"><h2>' . $data['title'] . '</h2><p>' . $data['description'] . '</p></div>';
-        echo '<div class="video"><iframe width="100%" height="250" src="https://www.youtube-nocookie.com/embed/' . $data['video'] . '?rel=0&color=white&showinfo=1&cc_load_policy=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>';
-        echo '<div class="clear"></div></div>';
-
+        ?>
+		<div class="ilj-row substep">
+			<div class="counter"><?php 
+        echo esc_html($this->feature_row_counter);
+        ?></div>
+			<div class="content">
+				<h2><?php 
+        echo wp_kses_post($data['title']);
+        ?></h2>
+				<p><?php 
+        echo wp_kses_post($data['description']);
+        ?></p>
+			</div>
+			<div class="video">
+				<iframe width="100%"
+						height="250"
+						src="<?php 
+        echo esc_url('https://www.youtube-nocookie.com/embed/' . $data['video'] . '?rel=0&color=white&showinfo=1&cc_load_policy=1');
+        ?>"
+						frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+				</iframe>
+			</div>
+			<div class="clear"></div>
+		</div>
+		<?php 
         $this->feature_row_counter++;
     }
 }

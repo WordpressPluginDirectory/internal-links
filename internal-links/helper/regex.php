@@ -1,4 +1,5 @@
 <?php
+
 namespace ILJ\Helper;
 
 /**
@@ -6,8 +7,8 @@ namespace ILJ\Helper;
  *
  * Methods for regex operations
  *
- * @since   1.2.0
  * @package ILJ\Helper
+ * @since   1.2.0
  */
 class Regex
 {
@@ -20,12 +21,11 @@ class Regex
      */
     public static function isValid($pattern)
     {
-        if (@preg_match('/' . $pattern . '/', null) === false) {
+        if (preg_match('/' . $pattern . '/', '') === false) {
             return false;
         }
         return true;
     }
-
     /**
      * Escapes the dot character in a text
      *
