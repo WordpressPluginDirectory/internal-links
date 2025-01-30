@@ -58,7 +58,7 @@ class Ruleset
         return isset($this->ruleset[$this->ruleset_pointer]);
     }
     /**
-     * Returns the rule entry from a speficic index within the ruleset container.
+     * Returns the rule entry from a specific index within the ruleset container.
      *
      * @since  1.0.0
      * @param  int $index The index of ruleset bag to retrieve a specific ruleset (optional)

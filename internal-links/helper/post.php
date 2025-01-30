@@ -26,7 +26,7 @@ class Post
         if (!$url) {
             $url = admin_url();
         }
-        if (filter_has_var(INPUT_POST, 'ilj-reset-options') && filter_has_var(INPUT_POST, 'section') && filter_has_var(INPUT_POST, 'action') && Options::KEY === $_POST['action']) {
+        if (filter_has_var(INPUT_POST, 'ilj-reset-options') && filter_has_var(INPUT_POST, 'section') && filter_has_var(INPUT_POST, 'action') && isset($_POST['action']) && Options::KEY === $_POST['action']) {
             self::resetOptionsAction();
         }
         if (filter_has_var(INPUT_POST, 'ilj-reset-keywords')) {
@@ -43,7 +43,8 @@ class Post
      */
     public static function resetOptionsAction()
     {
-        $section = Options::getSection($_POST['section']);
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- We are not processing form submission.
+        $section = isset($_POST['section']) ? Options::getSection($_POST['section']) : array();
         if ($section) {
             foreach ($section['options'] as $option) {
                 if (!$option instanceof OptionInterface) {

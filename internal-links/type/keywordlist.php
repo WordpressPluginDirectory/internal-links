@@ -64,7 +64,7 @@ class KeywordList
         }
     }
     /**
-     * Converts an user input of comma seperated values with placeholders to keywordlist datatype
+     * Converts an user input of comma separated values with placeholders to keywordlist datatype
      *
      * @since  1.0.0
      * @param  string $input The input string for object generation
@@ -173,10 +173,10 @@ class KeywordList
         return implode(',', $keywords);
     }
     /**
-     * Encodes a comma seperated list of keywords to an array
+     * Encodes a comma separated list of keywords to an array
      *
      * @since  1.0.0
-     * @param  string $csv_list A comma seperated list of keywords
+     * @param  string $csv_list A comma separated list of keywords
      * @return array
      */
     private static function decoded($csv_list)

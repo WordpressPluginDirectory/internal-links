@@ -144,4 +144,17 @@ class CustomFieldsToLinkTerm extends Custom_Fields_Option
         $hint = apply_filters(self::ILJ_ACF_HINT_FILTER_TERM, $hint);
         return $hint;
     }
+    /**
+     * Check if field is empty
+     *
+     * @return bool
+     */
+    public static function is_empty()
+    {
+        $custom_fields = Options::getOption(self::getKey());
+        if (empty($custom_fields)) {
+            return true;
+        }
+        return false;
+    }
 }

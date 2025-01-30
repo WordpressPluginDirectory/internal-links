@@ -27,6 +27,7 @@ class Translations
             SELECT *
             FROM %s translations
             WHERE element_type LIKE "%s%%"', $wpdb->prefix . self::ILJ_DATABASE_TABLE_WPML_TRANSLATIONS, $type_prefix . '_');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
 }

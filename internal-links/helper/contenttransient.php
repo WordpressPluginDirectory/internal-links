@@ -70,6 +70,7 @@ class ContentTransient
         global $wpdb;
         $prefix = '_transient_' . ContentTransient::ILJ_FILTERED_CONTENT_TRANSIENT . '%';
         $sql = $wpdb->prepare("DELETE FROM {$wpdb->options} WHERE `option_name` LIKE %s", $prefix);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($sql);
     }
 }

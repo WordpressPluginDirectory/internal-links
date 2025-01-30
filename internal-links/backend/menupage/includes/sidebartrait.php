@@ -24,8 +24,8 @@ trait SidebarTrait
      */
     protected function renderSidebar()
     {
-        $current_page = isset($_GET['page']) ? $_GET['page'] : '';
-        if (\ILJ\ilj_fs()->is_free_plan() && !User::get('hide_promo') && AdminMenu::ILJ_MENUPAGE_SLUG . '-' . Settings::ILJ_MENUPAGE_SETTINGS_SLUG != $current_page) {
+        $screen = get_current_screen();
+        if (\ILJ\ilj_fs()->is_free_plan() && !User::get('hide_promo') && 'toplevel_page_internal_link_juicer' == $screen->id) {
             $this->renderPromo();
         }
         ?>
@@ -147,7 +147,7 @@ trait SidebarTrait
         echo esc_url(get_admin_url(null, 'admin.php?page=' . AdminMenu::ILJ_MENUPAGE_SLUG . '-pricing'));
         ?>"
 					   class="button button-primary">&raquo; <?php 
-        esc_html_e(__('Upgrade now', 'internal-links'));
+        esc_html_e('Upgrade now', 'internal-links');
         ?></a>
 				</p>
 			</div>

@@ -60,7 +60,7 @@ class RatingNotifier
 				<?php 
         esc_html_e('Hey', 'internal-links');
         ?>&nbsp;<?php 
-        esc_html_e(User::getName());
+        echo esc_html(User::getName());
         ?>,
 				<?php 
         esc_html_e('you have been using the Internal Link Juicer for a while now - that\'s great!', 'internal-links');

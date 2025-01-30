@@ -40,8 +40,10 @@ class Tour extends AbstractMenuPage
     public function __construct()
     {
         $this->steps = array(array('slug' => 'intro', 'src' => '\ILJ\Backend\MenuPage\Tour\Intro'), array('slug' => 'editor', 'src' => '\ILJ\Backend\MenuPage\Tour\Editor'), array('slug' => 'links', 'cta' => __('Adjust the link behavior', 'internal-links'), 'src' => '\ILJ\Backend\MenuPage\Tour\Links'), array('slug' => 'settings', 'cta' => __('Discover the most important settings', 'internal-links'), 'src' => '\ILJ\Backend\MenuPage\Tour\Settings'), array('slug' => 'pro', 'cta' => __('Advanced linking with pro version', 'internal-links'), 'src' => '\ILJ\Backend\MenuPage\Tour\Pro'));
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just set value in the variable. No nonce verification needed.
         if (isset($_GET['action'])) {
-            $this->action = htmlspecialchars($_GET['action'], ENT_QUOTES, 'UTF-8');
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Just set value in the variable. No nonce verification needed.
+            $this->action = htmlspecialchars(sanitize_text_field(wp_unslash($_GET['action'])), ENT_QUOTES, 'UTF-8');
         }
         $this->page_slug = self::ILJ_MENUPAGE_TOUR_SLUG;
         $this->page_title = __('Interactive Tour', 'internal-links');
@@ -88,6 +90,7 @@ class Tour extends AbstractMenuPage
      */
     protected function isTourPage()
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Check page condition here. No nonce verification needed.
         if (isset($_GET['page']) && AdminMenu::ILJ_MENUPAGE_SLUG . '-' . self::ILJ_MENUPAGE_TOUR_SLUG == $_GET['page']) {
             return true;
         }
@@ -101,8 +104,10 @@ class Tour extends AbstractMenuPage
      */
     protected function setCurrentStep()
     {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Check tour step. No nonce verification needed.
         if (isset($_GET['step'])) {
             for ($i = 0; $i < count($this->steps); $i++) {
+                // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Set current tour step. No nonce verification needed.
                 if ($this->steps[$i]['slug'] == $_GET['step']) {
                     $this->current_step = new $this->steps[$i]['src']();
                     return;

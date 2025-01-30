@@ -126,6 +126,7 @@ class Custom_Fields
             return $field->get_escaped_sql_like_clause();
         }, $regex_fields);
         $query .= ' )';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $data = $wpdb->get_results($wpdb->prepare($query, array_merge(array($post_id), $names)), ARRAY_N);
         return array_map(function ($item) {
             return $item[0];
@@ -148,6 +149,7 @@ class Custom_Fields
             return $field->get_escaped_sql_like_clause();
         }, $regex_fields);
         $query .= ' )';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Already prepared.
         $data = $wpdb->get_results($wpdb->prepare($query, array_merge(array($term_id), $names)), ARRAY_N);
         return array_map(function ($item) {
             return $item[0];

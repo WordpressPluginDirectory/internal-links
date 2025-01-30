@@ -42,6 +42,7 @@ class LinkindexIndividualTemp
     {
         global $wpdb;
         $query_linkindex = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . ';';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($query_linkindex);
     }
     /**
@@ -53,8 +54,10 @@ class LinkindexIndividualTemp
     public static function flush()
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $row = $wpdb->get_var("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" . $wpdb->dbname . "' AND table_name = '" . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . "'");
         if (1 == $row) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
             $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP);
         }
     }
@@ -72,7 +75,9 @@ class LinkindexIndividualTemp
             return array();
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
         $query = $wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . ' linkindex WHERE linkindex.link_from = %d AND linkindex.type_from = %s', $id, $type);
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
         return $wpdb->get_results($query);
     }
     /**
@@ -110,6 +115,7 @@ class LinkindexIndividualTemp
 				WHERE target_table.link_from = source_table.link_from AND target_table.link_to = source_table.link_to AND target_table.anchor = source_table.anchor
 				AND target_table.type_from = source_table.type_from AND target_table.type_to = source_table.type_to
 			)';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Require to get desire result.
         $wpdb->query($query);
         self::uninstall_temp_db();
     }
@@ -128,6 +134,7 @@ class LinkindexIndividualTemp
     public static function check_exists($link_from, $link_to, $anchor, $type_from, $type_to, $link_type)
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
         $row = $wpdb->get_row($wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . ' WHERE link_from = %d AND link_to = %d AND anchor = %s AND type_from = %s AND type_to = %s AND link_type = %s', $link_from, $link_to, $anchor, $type_from, $type_to, $link_type));
         if ($row) {
             return true;

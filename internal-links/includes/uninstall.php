@@ -32,6 +32,7 @@ function ilj_uninstall_db()
 {
     global $wpdb;
     $query_linkindex = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . Linkindex::ILJ_DATABASE_TABLE_LINKINDEX . ';';
+    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
     $wpdb->query($query_linkindex);
     $fs_accounts = get_option('fs_accounts', array());
     unset($fs_accounts['id_slug_type_path_map'][ILJ_FREEMIUS_PLUGIN_ID]);

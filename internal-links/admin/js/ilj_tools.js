@@ -188,7 +188,7 @@
       var $spinner = $(this).parent().find('.spinner');
       $spinner.addClass('is-active');
       var current_url = window.location.href;
-      var download_url = current_url + '&ilj_export=' + export_type;
+      var download_url = current_url + '&ilj_export=' + export_type + '&nonce=' + ilj_tools.nonce;
       if (export_type == "keywords") {
         var $export_empty = $(this).closest('.wrap').find('input#ilj-export-empty');
         if ($export_empty.is(':checked')) {

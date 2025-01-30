@@ -23,11 +23,11 @@
     content: "\E001";
 }
 
-.ilj-ressources {
+.ilj-resources {
     margin-bottom: 0;
 }
 
-.ilj-ressources li {
+.ilj-resources li {
     margin-bottom: 0;
     display: inline-block;
     position: relative;
@@ -37,37 +37,37 @@
     box-sizing: border-box;
 }
 
-.ilj-ressources li:last-child {
+.ilj-resources li:last-child {
     margin-right: 0;
 }
 
 @media only screen and (min-width: 426px) and (max-width: 768px) {
-    .ilj-ressources li {
+    .ilj-resources li {
         width: 45%;
         margin-bottom: 3%;
     }
 }
 
 @media only screen and (max-width: 425px) {
-    .ilj-ressources li {
+    .ilj-resources li {
         width: 100%;
         margin-bottom: 10px;
     }
 }
 
-.ilj-ressources li span.dashicons {
+.ilj-resources li span.dashicons {
     padding: 0 7px;
     position: absolute;
     top: 50%;
     margin-top: -17px;
 }
 
-.ilj-ressources li span.dashicons:before {
+.ilj-resources li span.dashicons:before {
     font-size: 34px;
     color: #fcfcfc;
 }
 
-.ilj-ressources li a {
+.ilj-resources li a {
     text-decoration: none;
     background: #fff;
     display: block;
@@ -84,13 +84,13 @@
     transition: background-color 0.5s ease-out;
 }
 
-.ilj-ressources li a strong, .ilj-ressources li a span {
+.ilj-resources li a strong, .ilj-resources li a span {
     display: block;
     margin: 0;
     width: 100%;
 }
 
-.ilj-ressources li a strong {
+.ilj-resources li a strong {
     color: #f49616;
     font-size: 14px;
     font-style: normal;
@@ -98,11 +98,11 @@
     margin-bottom: 3px;
 }
 
-.ilj-ressources li a:hover {
+.ilj-resources li a:hover {
     background: #f8f8f8;
 }
 
-.ilj-ressources li a:hover strong {
+.ilj-resources li a:hover strong {
     text-decoration: underline;
 }
 

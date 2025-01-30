@@ -22,6 +22,7 @@ class Linkindex
     public static function flush()
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX);
     }
     /**
@@ -34,6 +35,7 @@ class Linkindex
     public static function delete_link_to($id, $type)
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . '  WHERE link_to = %d AND type_to = %s', $id, $type));
     }
     /**
@@ -46,20 +48,25 @@ class Linkindex
     public static function delete_link_from($id, $type)
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . ' WHERE link_from = %d AND type_from = %s', $id, $type));
     }
     public static function delete_for_individual_builds()
     {
         global $wpdb;
         $addition_query = '';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $outgoing = $wpdb->prepare('SELECT DISTINCT link_from, type_from FROM ' . $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . ' WHERE link_type = %s ' . $addition_query, LinkType::OUTGOING);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $outgoing_ids = $wpdb->get_results($outgoing, ARRAY_A);
         if (is_array($outgoing_ids) && !empty($outgoing_ids)) {
             foreach ($outgoing_ids as $value) {
                 self::delete_link_from($value['link_from'], $value['type_from']);
             }
         }
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $incoming = $wpdb->prepare('SELECT DISTINCT link_to, type_to FROM ' . $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . ' WHERE link_type = %s ' . $addition_query, LinkType::INCOMING);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $incoming_ids = $wpdb->get_results($incoming, ARRAY_A);
         if (is_array($incoming_ids) && !empty($incoming_ids)) {
             foreach ($incoming_ids as $value) {
@@ -76,10 +83,13 @@ class Linkindex
     public static function delete_individual_build_initialization_values()
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         if ($wpdb->get_var("SHOW TABLES LIKE '" . $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . "'") == $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP) {
             // delete initialization from outgoing build
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
             $wpdb->query('DELETE FROM ' . $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . " WHERE link_to = 0 AND type_to = '' AND anchor = '' AND link_type = 'outgoing'");
             // delete initialization from incoming build
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
             $wpdb->query('DELETE FROM ' . $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP . " WHERE link_from = 0 AND type_from = '' AND anchor = '' AND link_type = 'incoming'");
         }
     }
@@ -93,6 +103,7 @@ class Linkindex
     public static function delete_link_by_id($id, $type)
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . ' WHERE (link_from = %d AND type_from = %s) OR (link_to = %d AND type_to = %s)', $id, $type, $id, $type));
         /**
          * Fires linkindex is deleted
@@ -115,7 +126,9 @@ class Linkindex
             return array();
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared
         $query = $wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . ' linkindex WHERE linkindex.link_from = %d AND linkindex.type_from = %s', $id, $type);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -135,6 +148,7 @@ class Linkindex
             return;
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- We need to use a direct query here.
         $wpdb->insert($wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX, array('link_from' => $link_from, 'link_to' => $link_to, 'anchor' => $anchor, 'type_from' => $type_from, 'type_to' => $type_to), array('%d', '%d', '%s', '%s', '%s'));
     }
     /**
@@ -153,7 +167,8 @@ class Linkindex
         $type_mapping = array('link_from' => 'type_from', 'link_to' => 'type_to');
         $type = in_array($column, array_keys($type_mapping)) ? ', ' . $type_mapping[$column] . ' AS type ' : '';
         global $wpdb;
-        $query = sprintf('SELECT  %1$s, COUNT(*) AS elements%2$s FROM %3$s linkindex GROUP BY %1$s ORDER BY elements DESC', $column, $type, $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX);
+        $query = $wpdb->prepare('SELECT  %s, COUNT(*) AS elements%s FROM %s linkindex GROUP BY %s ORDER BY elements DESC', $column, $type, $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX, $column);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -201,6 +216,7 @@ class Linkindex
                     (outlinks.asset_type_ = inlinks.asset_type)
                 )
             ORDER BY %1$s DESC' . $limit, $order);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -220,12 +236,15 @@ class Linkindex
         }
         $select = 'SELECT * FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . ' linkindex';
         if ('from' == $direction) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
             $query = $wpdb->prepare($select . ' WHERE linkindex.link_from = %d AND linkindex.type_from = %s', $id, $type);
         } elseif ('to' == $direction) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
             $query = $wpdb->prepare($select . ' WHERE linkindex.link_to = %d AND linkindex.type_to = %s', $id, $type);
         } else {
             return null;
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -246,12 +265,17 @@ class Linkindex
         $where = self::ilj_grid_filter($request, $columns, $bindings);
         $where = ('' != $where) ? " WHERE {$where} " : $where;
         $sql = "SELECT *, count(anchor) as frequency FROM `{$table}` {$where} GROUP BY anchor  {$order} {$limit}";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $prepared_query = empty($bindings) ? $sql : $wpdb->prepare($sql, $bindings);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $data = $wpdb->get_results($prepared_query);
         $sql1 = "SELECT COUNT(`id`) FROM `{$table}` {$where} GROUP BY anchor ";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Required to get desire results.
         $prepared_query1 = empty($bindings) ? $sql1 : $wpdb->prepare($sql1, $bindings);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $res_filter_length = $wpdb->get_results($prepared_query1);
         $records_filtered = count($res_filter_length);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We need to use a direct query here.
         $res_total_length = $wpdb->get_results("SELECT COUNT(`id`) FROM `{$table}` GROUP BY anchor");
         $records_total = count($res_total_length);
         return array("draw" => isset($request['draw']) ? intval($request['draw']) : 0, "recordsTotal" => intval($records_total), "recordsFiltered" => intval($records_filtered), "data" => $data);
@@ -396,7 +420,11 @@ class Linkindex
         }
         $type_mapping = array('link_from' => 'type_from', 'link_to' => 'type_to');
         $type_field = $type_mapping[$column];
-        $query = $wpdb->prepare('SELECT %1$s, COUNT(1) FROM %2$s linkindex WHERE linkindex.%3$s = %4$s AND %5$s = "%6$s" GROUP BY %7$s', $column, $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX, $column, $id, $type_field, $type, $column);
+        $table_name = esc_sql($wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX);
+        $sql = "SELECT {$column}, COUNT(1) FROM {$table_name} AS linkindex WHERE linkindex.{$column} = %s AND {$type_field} = %s GROUP BY {$column}";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
+        $query = $wpdb->prepare($sql, $id, $type);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return (int) $wpdb->get_var($query, 1);
     }
     /**
@@ -408,6 +436,7 @@ class Linkindex
     public static function delete_links_by_type($type)
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($wpdb->prepare('DELETE FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX . ' WHERE type_from = %s OR type_to = %s', $type, $type));
     }
 }

@@ -22,6 +22,8 @@ use ILJ\Core\Options\TaxonomyWhitelist;
 use ILJ\Core\Options\Whitelist;
 use ILJ\Database\Keywords;
 use ILJ\Database\Linkindex;
+use ILJ\Database\Postmeta;
+use ILJ\Database\Termmeta;
 use ILJ\Enumeration\LinkType;
 use ILJ\Enumeration\TagExclusion;
 use ILJ\Helper\BatchBuilding;
@@ -35,6 +37,7 @@ use ILJ\Helper\Replacement;
 use ILJ\Helper\Statistic;
 use ILJ\Posttypes\CustomLinks;
 use ILJ\Helper\Cloudflare;
+use ILJ\Type\KeywordList;
 /**
  * The main app
  *
@@ -142,10 +145,14 @@ class App
             return;
         }
         $batch_build_info = new HelperBatchInfo();
-        if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
-            $batch_build_info->incrementBatchCounter();
-            $batch_build_info->updateBatchBuildInfo();
-            as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+        $keyword_list = KeywordList::fromMeta($post->ID, 'post', Postmeta::ILJ_META_KEY_LINKDEFINITION);
+        $keyword_count = $keyword_list->getCount();
+        if ($keyword_count > 0) {
+            if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
+                $batch_build_info->incrementBatchCounter();
+                $batch_build_info->updateBatchBuildInfo();
+                as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+            }
         }
         if (Blacklist::checkIfBlacklisted("post", $post->ID)) {
             return;
@@ -196,6 +203,7 @@ class App
             return;
         }
         // LiteSpeed has a generic problem with terminating cron jobs, this shows the admin notice
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.MissingUnslash, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- It's not input value.
         if (false == Options::getOption(Notices::ILJ_DISMISS_ADMIN_WARNING_LITESPEED) && isset($_SERVER['SERVER_SOFTWARE']) && false !== strpos($_SERVER['SERVER_SOFTWARE'], 'LiteSpeed')) {
             if (!is_file(ABSPATH . '.htaccess') || !preg_match('/noabort/i', file_get_contents(ABSPATH . '.htaccess'))) {
                 add_action('all_admin_notices', array('\ILJ\Backend\Notices', 'show_admin_warning_litespeed'));
@@ -229,6 +237,8 @@ class App
         add_action('wp_ajax_load_anchor_statistics_chunk', array('\ILJ\Helper\Ajax', 'load_anchor_statistics_chunk_callback'));
         add_action('updated_option', array('ILJ\Helper\Options', 'updateOptionIndexRebuild'), 10, 3);
         add_action('wp_ajax_ilj_dismiss_admin_warning_litespeed', array('\ILJ\Backend\Notices', 'dismiss_admin_warning_litespeed'));
+        add_action('wp_ajax_render_keyword_meta_box', array('\ILJ\Backend\Editor', 'render_keyword_meta_box_callback'));
+        add_action('wp_ajax_nopriv_render_keyword_meta_box', array('\ILJ\Backend\Editor', 'render_keyword_meta_box_callback'));
         $hide_status_bar = Options::getOption(\ILJ\Core\Options\HideStatusBar::getKey());
         if (!$hide_status_bar) {
             add_action('admin_bar_menu', array('\ILJ\Backend\AdminBar', 'addLink'), 999);
@@ -379,6 +389,8 @@ class App
             $incoming_metas = array(Editor::ILJ_META_KEY_LIMITINCOMINGLINKS, Editor::ILJ_META_KEY_MAXINCOMINGLINKS);
             $outgoing_metas = array(Editor::ILJ_META_KEY_BLACKLISTDEFINITION, Editor::ILJ_META_KEY_LIMITLINKSPERPARAGRAPH, Editor::ILJ_META_KEY_LINKSPERPARAGRAPH, Editor::ILJ_META_KEY_LIMITOUTGOINGLINKS, Editor::ILJ_META_KEY_MAXOUTGOINGLINKS);
             $whitelisted_post_types = \ILJ\Core\Options::getOption(Whitelist::getKey());
+            $keyword_list = KeywordList::fromMeta($post_id, 'post', Postmeta::ILJ_META_KEY_LINKDEFINITION);
+            $keyword_count = $keyword_list->getCount();
             if (!empty($whitelisted_post_types)) {
                 if (!in_array($meta_key, $outgoing_metas) && !in_array($meta_key, $incoming_metas)) {
                     return;
@@ -405,10 +417,12 @@ class App
                     return;
                 }
                 if (in_array($meta_key, $incoming_metas)) {
-                    if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post_id, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
-                        $batch_build_info->incrementBatchCounter();
-                        $batch_build_info->updateBatchBuildInfo();
-                        as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post_id, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+                    if (0 != $keyword_count) {
+                        if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post_id, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
+                            $batch_build_info->incrementBatchCounter();
+                            $batch_build_info->updateBatchBuildInfo();
+                            as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post_id, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+                        }
                     }
                 }
             }
@@ -468,10 +482,14 @@ class App
                 if ('draft' == $new_status) {
                     return;
                 }
-                if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
-                    $batch_build_info->incrementBatchCounter();
-                    $batch_build_info->updateBatchBuildInfo();
-                    as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+                $keyword_list = KeywordList::fromMeta($post->ID, 'post', Postmeta::ILJ_META_KEY_LINKDEFINITION);
+                $keyword_count = $keyword_list->getCount();
+                if (0 != $keyword_count) {
+                    if (false === as_has_scheduled_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP)) {
+                        $batch_build_info->incrementBatchCounter();
+                        $batch_build_info->updateBatchBuildInfo();
+                        as_enqueue_async_action(IndexBuilder::ILJ_SET_INDIVIDUAL_INDEX_REBUILD, array(array("id" => $post->ID, "type" => "post", "link_type" => LinkType::INCOMING)), HelperBatchInfo::ILJ_ASYNC_GROUP);
+                    }
                 }
             }
         }, 40, 3);
@@ -521,7 +539,7 @@ class App
      */
     public function addSettingsLink($links)
     {
-        $settings_link = '<a href="admin.php?page=' . AdminMenu::ILJ_MENUPAGE_SLUG . '-' . Settings::ILJ_MENUPAGE_SETTINGS_SLUG . '">' . __('Settings') . '</a>';
+        $settings_link = '<a href="admin.php?page=' . AdminMenu::ILJ_MENUPAGE_SLUG . '-' . Settings::ILJ_MENUPAGE_SETTINGS_SLUG . '">' . __('Settings', 'internal-links') . '</a>';
         array_unshift($links, $settings_link);
         return $links;
     }

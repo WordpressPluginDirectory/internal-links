@@ -41,6 +41,7 @@ class Regex_Custom_Field
      */
     public static function get_starts_with_label_template()
     {
+        /* translators: %s: Custom Field Name */
         return __('Custom field name starts with \'%s\'', 'internal-links');
     }
     /**
@@ -50,6 +51,7 @@ class Regex_Custom_Field
      */
     public static function get_ends_with_label_template()
     {
+        /* translators: %s: Custom Field Name */
         return __('Custom field name ends with \'%s\'', 'internal-links');
     }
     /**
@@ -59,6 +61,7 @@ class Regex_Custom_Field
      */
     public static function get_contains_label_template()
     {
+        /* translators: %s: Custom Field Name */
         return __('Custom field name contains \'%s\'', 'internal-links');
     }
     /**

@@ -24,7 +24,7 @@ class Encoding
         return str_replace('\\', '|', $regex_string);
     }
     /**
-     * Unmasks sanitized (back-)slashes for retreiving a pattern from the postmeta table
+     * Unmasks sanitized (back-)slashes for retrieving a pattern from the postmeta table
      *
      * @since  1.0.0
      * @param  string $masked_string The masked regex pattern

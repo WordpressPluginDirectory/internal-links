@@ -25,6 +25,7 @@ class Transient_Cache
     public static function delete_all()
     {
         global $wpdb;
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We need to use a direct query here.
         $wpdb->query($wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $wpdb->esc_like(self::TRANSIENT_PREFIX . self::CACHE_PREFIX) . '%'));
     }
     /**

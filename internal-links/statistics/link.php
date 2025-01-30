@@ -107,6 +107,7 @@ class Link
         $term_query = "";
         $type_condition_query = "WHERE idx.type = items.type AND (idx.type != CONCAT(items.type, '_meta') OR items.entity_type != 'ilj_customlinks' OR items.entity_type != 'term')";
         $query = "\n\t\t\tSELECT\n\t\t\t    idx.type AS main_type,\n\t\t\t    {$sub_type_query}\n\t\t\tFROM\n\t\t\t    (\n\t\t\t        SELECT\n\t\t\t            p.ID AS id,\n\t\t\t            'post' AS type,\n\t\t\t            p.post_type as entity_type\n\t\t\t        FROM\n\t\t\t            {$wpdb->posts} p\n\t\t\t        LEFT JOIN {$wpdb->postmeta} pm ON p.ID = pm.post_id AND pm.meta_key = 'ilj_linkdefinition'\n\t\t\t\t\tWHERE p.post_status = 'publish'\n\t\t\t    \t{$term_query}\n\t\t\t    ) items\n\t\t\t\n\t\t\tRIGHT JOIN (\n\t\t\t        SELECT DISTINCT link_from as id, type_from AS type FROM {$link_index_table_name}\n\t\t\t\t\tUNION\n\t\t\t\t\tSELECT DISTINCT link_to AS id, type_to AS type FROM {$link_index_table_name}\n\t\t\t) AS idx ON items.id = idx.id\n\t\t\t{$type_condition_query}\n\t\t\tGROUP BY main_type, sub_type\n\t\t\t";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -129,10 +130,23 @@ class Link
         }
         $query .= "\tORDER BY {$this->get_sort_by()} {$this->get_sort_direction()} LIMIT %d OFFSET %d;";
         if (!empty($this->args['search'])) {
-            $prepared_query = $wpdb->prepare($query, (!empty($this->args['search'])) ? '%' . $wpdb->esc_like($this->args['search']) . '%' : '', $this->args['limit'], $this->args['offset']);
+            $prepared_query = $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Require to get desired result.
+                $query,
+                (!empty($this->args['search'])) ? '%' . $wpdb->esc_like($this->args['search']) . '%' : '',
+                $this->args['limit'],
+                $this->args['offset']
+            );
         } else {
-            $prepared_query = $wpdb->prepare($query, $this->args['limit'], $this->args['offset']);
+            $prepared_query = $wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Require to get desired result.
+                $query,
+                $this->args['limit'],
+                $this->args['offset']
+            );
         }
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We need to use a direct query here.
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
         $results = $wpdb->get_results($prepared_query, ARRAY_A);
         return array_map(function ($result) {
             $content = Content::from_content_type_and_id($result['type'], $result['sub_type'], $result['id']);
@@ -160,8 +174,14 @@ class Link
             $query .= " AND (main_type IN ({$this->get_sql_escaped_main_types()}) AND sub_type IN ({$this->get_sql_escaped_sub_types()}) )";
         }
         if (!empty($this->args['search'])) {
-            return intval($wpdb->get_var($wpdb->prepare($query, '%' . $wpdb->esc_like($this->args['search']) . '%')));
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We need to use a direct query here.
+            return intval($wpdb->get_var($wpdb->prepare(
+                // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Require to get desired result.
+                $query,
+                '%' . $wpdb->esc_like($this->args['search']) . '%'
+            )));
         } else {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired result.
             return intval($wpdb->get_var($query));
         }
     }
@@ -175,6 +195,7 @@ class Link
         global $wpdb;
         $link_index_table_name = $wpdb->prefix . Linkindex::ILJ_DATABASE_TABLE_LINKINDEX;
         $count_query = "\n\t\t\tSELECT COUNT(DISTINCT id, type) \n\t\t\tFROM (\n\t\t\t\tSELECT\n\t\t\t\t\titems.id,\n\t\t\t\t\tCASE \n\t\t\t\t\t\tWHEN idx.type = CONCAT(items.type, '_meta') THEN CONCAT(items.type, '_meta') \n\t\t\t\t\t\tELSE items.type\n\t\t\t\t\tEND AS type\n\t\t\t\tFROM\n\t\t\t\t(\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tp.ID AS id,\n\t\t\t\t\t\t'post' AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$wpdb->posts} p\n\t\t\t\t\tWHERE p.post_status = 'publish'\n\t\t\t\t\tUNION\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tt.term_id AS id,\n\t\t\t\t\t\t'term' AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$wpdb->terms} t\n\t\t\t\t) items\n\t\t\t\tRIGHT JOIN (\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tlink_from AS id, \n\t\t\t\t\t\ttype_from AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$link_index_table_name}\n\t\t\t\t\tGROUP BY\n\t\t\t\t\t\tlink_from, type_from\n\t\t\t\t) AS idx \n\t\t\t\tON items.id = idx.id \n\t\t\t\tAND (idx.type = items.type OR idx.type = CONCAT(items.type, '_meta'))\n\n\t\t\t\tUNION\n\n\t\t\t\tSELECT\n\t\t\t\t\titems.id,\n\t\t\t\t\tCASE \n\t\t\t\t\t\tWHEN idx.type = CONCAT(items.type, '_meta') THEN CONCAT(items.type, '_meta') \n\t\t\t\t\t\tELSE items.type\n\t\t\t\t\tEND AS type\n\t\t\t\tFROM\n\t\t\t\t(\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tp.ID AS id,\n\t\t\t\t\t\t'post' AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$wpdb->posts} p\n\t\t\t\t\tWHERE p.post_status = 'publish'\n\t\t\t\t\tUNION\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tt.term_id AS id,\n\t\t\t\t\t\t'term' AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$wpdb->terms} t\n\t\t\t\t) items\n\t\t\t\tRIGHT JOIN (\n\t\t\t\t\tSELECT\n\t\t\t\t\t\tlink_to AS id, \n\t\t\t\t\t\ttype_to AS type\n\t\t\t\t\tFROM\n\t\t\t\t\t\t{$link_index_table_name}\n\t\t\t\t\tGROUP BY\n\t\t\t\t\t\tlink_to, type_to\n\t\t\t\t) AS idx \n\t\t\t\tON items.id = idx.id \n\t\t\t\tAND (idx.type = items.type OR idx.type = CONCAT(items.type, '_meta')  OR idx.type = 'custom')\n\t\t\t) AS combined_results;\n\n\t\t";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired result.
         return intval($wpdb->get_var($count_query));
     }
 }

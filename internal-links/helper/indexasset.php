@@ -91,6 +91,7 @@ class IndexAsset
         // this separates the $fields with comma
         $fields_placeholder = implode(', ', $fields);
         $post_query = "SELECT {$fields_placeholder} FROM {$wpdb->posts} WHERE" . $addition_query . " post_type IN (" . self::escape_array($whitelist) . ") AND post_status = 'publish' ORDER BY ID DESC ";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $posts = $wpdb->get_results($post_query, OBJECT);
         return $posts;
     }
@@ -142,6 +143,7 @@ class IndexAsset
     public static function getIncomingLinksCount($id, $type, $scope, $exclude_id = null, $exclude_type = null)
     {
         global $wpdb;
+        // phpcs:disable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired results.
         if (self::ILJ_FULL_BUILD == $scope) {
             $ilj_linkindex_table = $wpdb->prefix . LinkindexTemp::ILJ_DATABASE_TABLE_LINKINDEX_TEMP;
         } elseif (self::ILJ_INDIVIDUAL_BUILD == $scope) {
@@ -158,6 +160,7 @@ class IndexAsset
             return (int) $incoming_links;
         }
         $incoming_links = $wpdb->get_var("SELECT count(link_to) FROM {$ilj_linkindex_table} WHERE (link_from != 0 AND type_from != '') AND ((link_to = '" . $id . "' AND type_to = '" . $type . "') " . $query . ')');
+        // phpcs:enable WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return (int) $incoming_links;
     }
     /**
@@ -177,6 +180,7 @@ class IndexAsset
             $ilj_linkindex_table = $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP;
         }
         $additional_query = '';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired results.
         $outgoing = $wpdb->get_var("SELECT count(link_from) FROM {$ilj_linkindex_table} WHERE (link_to != 0 AND type_to != '') AND (link_from = '" . $id . "' AND (type_from = '" . $type . "' " . $additional_query . '))');
         return (int) $outgoing;
     }
@@ -199,6 +203,7 @@ class IndexAsset
         }
         $additional_query = '';
         $linked_url_value = array();
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired results.
         $linked_urls = $wpdb->get_var("SELECT count(link_to) FROM {$ilj_linkindex_table} WHERE (link_from = '" . $id . "' AND link_to = '" . $link_to_id . "' AND (type_from = '" . $type . "' " . $additional_query . '))');
         $linked_url_value[$link_to_id] = (int) $linked_urls;
         return $linked_urls;
@@ -220,6 +225,7 @@ class IndexAsset
             $ilj_linkindex_table = $wpdb->prefix . LinkindexIndividualTemp::ILJ_DATABASE_TABLE_LINKINDEX_INDIVIDUAL_TEMP;
         }
         $additional_query = '';
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desired results.
         $linked_anchors = $wpdb->get_results("SELECT anchor FROM {$ilj_linkindex_table} WHERE (link_to != 0 AND type_to != '' AND anchor != '') AND (link_from = '" . $id . "' AND (type_from = '" . $type . "' " . $additional_query . '))', ARRAY_A);
         $anchors = array();
         foreach ($linked_anchors as $value) {
@@ -302,10 +308,13 @@ class IndexAsset
             $data = '*';
         }
         $select = 'SELECT ' . $data . ' FROM ' . $table;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- Require to get desired results.
         $query = $wpdb->prepare($select . " WHERE {$type_key} = %d " . $query, $id);
         if ($single) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Already prepared.
             $meta_data = $wpdb->get_var($query);
         } elseif (!$single) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Already prepared.
             $meta_data = $wpdb->get_results($query, ARRAY_A);
         }
         return $meta_data;
@@ -322,8 +331,8 @@ class IndexAsset
         if (is_array($arr) && !empty($arr)) {
             $escaped = array();
             foreach ($arr as $v) {
-                $v = stripslashes($v);
                 // Remove extra slashes
+                $v = stripslashes($v);
                 if (is_numeric($v)) {
                     $escaped[] = $wpdb->prepare('%d', $v);
                 } else {

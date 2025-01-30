@@ -45,7 +45,7 @@ class Notices
      */
     public static function dismiss_admin_warning_litespeed()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-general-nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-general-nonce')) {
             die;
         }
         if (!current_user_can('manage_options')) {

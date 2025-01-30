@@ -51,11 +51,16 @@ class Keyword
      */
     public static function importKeywordsFromFile($file)
     {
-        ini_set('auto_detect_line_endings', true);
+        // "auto_detect_line_endings" is deprecated in PHP 8.1.
+        if (version_compare(PHP_VERSION, '8.1.0', '<')) {
+            // phpcs:ignore Squiz.PHP.DiscouragedFunctions.Discouraged -- Added if PHP < 8.1.
+            ini_set('auto_detect_line_endings', true);
+        }
         $import_count = 0;
         if (!file_exists($file)) {
             return $import_count;
         }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fopen -- We are handling local file.
         $handle = fopen($file, 'r');
         for ($i = 0; $row = fgetcsv($handle, 0, ';'); ++$i) {
             if (0 === $i) {
@@ -84,6 +89,7 @@ class Keyword
             }
             $import_count++;
         }
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose -- We are handling local file.
         fclose($handle);
         Statistic::count_all_configured_keywords();
         return $import_count;

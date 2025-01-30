@@ -361,7 +361,7 @@ class LinkBuilder implements Text_To_Link_Converter_Interface
         }
         if ('json' === $this->content_type) {
             // If the content is json, the link should be escaped before replacement.
-            $link = trim(json_encode($link), '"');
+            $link = trim(wp_json_encode($link), '"');
         }
         return $link;
     }

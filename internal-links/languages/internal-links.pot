@@ -1,4 +1,4 @@
-# Copyright (C) 2024 internal-links
+# Copyright (C) 2025 internal-links
 # This file is distributed under the same license as the internal-links package.
 msgid ""
 msgstr ""
@@ -8,7 +8,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Language-Team: Team Updraft <support@internallinkjuicer.com>\n"
 "Last-Translator: Team Updraft <support@internallinkjuicer.com>\n"
-"POT-Creation-Date: 2024-10-24 17:13+0000\n"
+"POT-Creation-Date: 2025-01-29 13:15+0000\n"
 "Report-Msgid-Bugs-To: https://wordpress.org/support/plugin/internal-links\n"
 "X-Poedit-Basepath: ..\n"
 "X-Poedit-KeywordsList: __;_e;_ex:1,2c;_n:1,2;_n_noop:1,2;_nx:1,2,4c;_nx_noop:1,2,3c;_x:1,2c;esc_attr__;esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c\n"
@@ -29,15 +29,16 @@ msgstr ""
 msgid "Delete all caches"
 msgstr ""
 
-#: src/backend/adminbar.php:107
+#. translators: %s: Post Type
+#: src/backend/adminbar.php:108
 msgid "Delete this %s cache"
 msgstr ""
 
-#: src/backend/adminbar.php:107
+#: src/backend/adminbar.php:108
 msgid "Delete this term cache"
 msgstr ""
 
-#: src/backend/adminmenu.php:53, src/backend/adminmenu.php:54, src/backend/editor.php:49, src/backend/editor.php:60, src/backend/editor.php:510
+#: src/backend/adminmenu.php:53, src/backend/adminmenu.php:54, src/backend/editor.php:52, src/backend/editor.php:63, src/backend/editor.php:528
 msgid "Internal Links"
 msgstr ""
 
@@ -45,203 +46,203 @@ msgstr ""
 msgid "Configured keywords for internal linking"
 msgstr ""
 
-#: src/backend/editor.php:84
+#: src/backend/editor.php:87
 msgid "The keywords"
 msgstr ""
 
-#: src/backend/editor.php:166, src/helper/help.php:56, src/helper/help.php:71, src/backend/menupage/includes/postboxtrait.php:36
+#: src/backend/editor.php:169, src/helper/help.php:56, src/helper/help.php:71, src/backend/menupage/includes/postboxtrait.php:36
 msgid "Get help"
 msgstr ""
 
-#: src/backend/editor.php:197
+#: src/backend/editor.php:200
 msgid "Delete Cache"
 msgstr ""
 
-#: src/backend/editor.php:414
+#: src/backend/editor.php:432
 msgid "Add Keyword"
 msgstr ""
 
-#: src/backend/editor.php:415, src/backend/menupage/dashboard.php:368
+#: src/backend/editor.php:433, src/backend/menupage/dashboard.php:368
 msgid "Keyword"
 msgstr ""
 
-#: src/backend/editor.php:416
+#: src/backend/editor.php:434
 msgid "Keywords get used <strong>case insensitive</strong>"
 msgstr ""
 
-#: src/backend/editor.php:417
+#: src/backend/editor.php:435
 msgid "Separate multiple keywords by commas"
 msgstr ""
 
-#: src/backend/editor.php:418
+#: src/backend/editor.php:436
 msgid "Configure the gap dimension."
 msgstr ""
 
-#: src/backend/editor.php:418
+#: src/backend/editor.php:436
 msgid "It represents the number of keywords that appear between your other keywords dynamically."
 msgstr ""
 
-#: src/backend/editor.php:418
+#: src/backend/editor.php:436
 msgid "Learn more in our documentation:"
 msgstr ""
 
-#: src/backend/editor.php:418
+#: src/backend/editor.php:436
 msgid "Click here to open"
 msgstr ""
 
-#: src/backend/editor.php:419
+#: src/backend/editor.php:437
 msgid "Keyword gaps"
 msgstr ""
 
-#: src/backend/editor.php:420
+#: src/backend/editor.php:438
 msgid "Add gap"
 msgstr ""
 
-#: src/backend/editor.php:421
+#: src/backend/editor.php:439
 msgid "Gap type"
 msgstr ""
 
-#: src/backend/editor.php:422
+#: src/backend/editor.php:440
 msgid "Minimum"
 msgstr ""
 
-#: src/backend/editor.php:423
+#: src/backend/editor.php:441
 msgid "Exact"
 msgstr ""
 
-#: src/backend/editor.php:424
+#: src/backend/editor.php:442
 msgid "Maximum"
 msgstr ""
 
-#: src/backend/editor.php:425
+#: src/backend/editor.php:443
 msgid "Minimum amount of keywords within the gap."
 msgstr ""
 
-#: src/backend/editor.php:425
+#: src/backend/editor.php:443
 msgid "No upper limits."
 msgstr ""
 
-#: src/backend/editor.php:426
+#: src/backend/editor.php:444
 msgid "Exact amount of keywords within the gap."
 msgstr ""
 
-#: src/backend/editor.php:427
+#: src/backend/editor.php:445
 msgid "Maximum amount of keywords within the gap."
 msgstr ""
 
-#: src/backend/editor.php:428
+#: src/backend/editor.php:446
 msgid "Overrides the general setting for the current asset."
 msgstr ""
 
-#: src/backend/editor.php:429
+#: src/backend/editor.php:447
 msgid "Toggle to add/remove from global blacklist."
 msgstr ""
 
-#: src/backend/editor.php:430
+#: src/backend/editor.php:448
 msgid "Toggle to add/remove incoming links limit."
 msgstr ""
 
-#: src/backend/editor.php:431
+#: src/backend/editor.php:449
 msgid "Toggle to add/remove outgoing links limit."
 msgstr ""
 
-#: src/backend/editor.php:432
+#: src/backend/editor.php:450
 msgid "Insert gaps between keywords"
 msgstr ""
 
-#: src/backend/editor.php:433, src/backend/menupage/dashboard.php:84
+#: src/backend/editor.php:451, src/backend/menupage/dashboard.php:84
 msgid "Configured keywords"
 msgstr ""
 
-#: src/backend/editor.php:434
+#: src/backend/editor.php:452
 msgid "This keyword already exists."
 msgstr ""
 
-#: src/backend/editor.php:435
+#: src/backend/editor.php:453
 msgid "No keyword defined."
 msgstr ""
 
-#: src/backend/editor.php:436
+#: src/backend/editor.php:454
 msgid "Length of given keyword not valid."
 msgstr ""
 
-#: src/backend/editor.php:437
+#: src/backend/editor.php:455
 msgid "Multiple consecutive placeholders are not allowed."
 msgstr ""
 
-#: src/backend/editor.php:438
+#: src/backend/editor.php:456
 msgid "No keywords configured."
 msgstr ""
 
-#: src/backend/editor.php:439
+#: src/backend/editor.php:457
 msgid "Exact keyword gap:"
 msgstr ""
 
-#: src/backend/editor.php:440
+#: src/backend/editor.php:458
 msgid "Maximum keyword gap:"
 msgstr ""
 
-#: src/backend/editor.php:441
+#: src/backend/editor.php:459
 msgid "Minimum keyword gap:"
 msgstr ""
 
-#: src/backend/editor.php:442
+#: src/backend/editor.php:460
 msgid "Limit incoming Links:"
 msgstr ""
 
-#: src/backend/editor.php:443
+#: src/backend/editor.php:461
 msgid "Maximum incoming links:"
 msgstr ""
 
-#: src/backend/editor.php:444
+#: src/backend/editor.php:462
 msgid "Keywords, that don`t get linked in the current content:"
 msgstr ""
 
-#: src/backend/editor.php:445
+#: src/backend/editor.php:463
 msgid "With the free Basic version of the Iternal Link Juicer, you can block 2 keywords from being linked."
 msgstr ""
 
-#: src/backend/editor.php:446
+#: src/backend/editor.php:464
 msgid "Upgrade to Pro and add unlimited keywords"
 msgstr ""
 
-#: src/backend/editor.php:447
+#: src/backend/editor.php:465
 msgid "Configured keyword blacklist:"
 msgstr ""
 
-#: src/backend/editor.php:448
+#: src/backend/editor.php:466
 msgid "Is on global blacklist:"
 msgstr ""
 
-#: src/backend/editor.php:449
+#: src/backend/editor.php:467
 msgid "Limit links per paragraph:"
 msgstr ""
 
-#: src/backend/editor.php:450
+#: src/backend/editor.php:468
 msgid "Maximum links per paragraph:"
 msgstr ""
 
-#: src/backend/editor.php:451
+#: src/backend/editor.php:469
 msgid "Limit outgoing Links:"
 msgstr ""
 
-#: src/backend/editor.php:452
+#: src/backend/editor.php:470
 msgid "Maximum outgoing links:"
 msgstr ""
 
-#: src/backend/editor.php:453
+#: src/backend/editor.php:471
 msgid "Cache cleared."
 msgstr ""
 
-#: src/backend/editor.php:454
+#: src/backend/editor.php:472
 msgid "Upgrade to Pro"
 msgstr ""
 
-#: src/backend/editor.php:456, src/backend/menupage/settings.php:111
+#: src/backend/editor.php:474, src/backend/menupage/settings.php:111
 msgid "This is a PRO Feature."
 msgstr ""
 
-#: src/backend/editor.php:476, src/helper/options.php:40, src/backend/menupage/tools.php:156
+#: src/backend/editor.php:494, src/helper/options.php:40, src/backend/menupage/tools.php:156
 msgid "This feature is part of the Pro version"
 msgstr ""
 
@@ -257,7 +258,7 @@ msgstr ""
 msgid "Please consult this FAQ if you have problems building links."
 msgstr ""
 
-#: src/backend/ratingnotifier.php:61, src/backend/menupage/tour.php:177
+#: src/backend/ratingnotifier.php:61, src/backend/menupage/tour.php:182
 msgid "Internal Link Juicer"
 msgstr ""
 
@@ -289,16 +290,20 @@ msgstr ""
 msgid "Please remind me later"
 msgstr ""
 
-#: src/backend/ratingnotifier.php:94, src/backend/menupage/includes/sidebartrait.php:83
+#: src/backend/ratingnotifier.php:94, src/backend/menupage/includes/sidebartrait.php:82
 msgid "Hide this information forever"
 msgstr ""
 
-#: src/core/app.php:391
+#: src/core/app.php:409
 msgid "Activate custom fields"
 msgstr ""
 
-#: src/core/app.php:392
+#: src/core/app.php:410
 msgid "Maximize compatibility with builders, themes and plugins enabling linking from <strong>custom fields</strong>."
+msgstr ""
+
+#: src/core/app.php:1060, src/backend/menupage/settings.php:41, src/backend/menupage/settings.php:160
+msgid "Settings"
 msgstr ""
 
 #: src/core/compat.php:349, src/core/compat.php:362
@@ -357,11 +362,13 @@ msgstr ""
 msgid "Different action buttons related to the use of the plugin"
 msgstr ""
 
-#: src/data/content.php:245, src/data/content.php:243
+#. translators: %s: Taxonomy Title
+#: src/data/content.php:247, src/data/content.php:244
 msgid "Edit %s"
 msgstr ""
 
-#: src/data/content.php:300, src/data/content.php:298
+#. translators: %s: Taxonomy Title
+#: src/data/content.php:306, src/data/content.php:303
 msgid "View %s"
 msgstr ""
 
@@ -429,99 +436,100 @@ msgstr ""
 msgid "Sourcecode"
 msgstr ""
 
-#: src/helper/ajax.php:130
+#: src/helper/ajax.php:136
 msgid "Index rebuild successfully scheduled."
 msgstr ""
 
-#: src/helper/ajax.php:135
+#: src/helper/ajax.php:141
 msgid "There has been an error in initiating the index rebuild."
 msgstr ""
 
-#: src/helper/ajax.php:236, src/backend/menupage/dashboard.php:312, src/backend/menupage/dashboard.php:349
+#: src/helper/ajax.php:242, src/backend/menupage/dashboard.php:312, src/backend/menupage/dashboard.php:349
 msgid "Edit"
 msgstr ""
 
-#: src/helper/ajax.php:237, src/backend/menupage/dashboard.php:313, src/backend/menupage/dashboard.php:350
+#: src/helper/ajax.php:243, src/backend/menupage/dashboard.php:313, src/backend/menupage/dashboard.php:350
 msgid "Open"
 msgstr ""
 
-#: src/helper/ajax.php:239, src/backend/menupage/dashboard.php:310
+#: src/helper/ajax.php:245, src/backend/menupage/dashboard.php:310
 msgid "Show incoming links"
 msgstr ""
 
-#: src/helper/ajax.php:240, src/backend/menupage/dashboard.php:311
+#: src/helper/ajax.php:246, src/backend/menupage/dashboard.php:311
 msgid "Show outgoing links"
 msgstr ""
 
-#: src/helper/ajax.php:268
+#: src/helper/ajax.php:274
 msgid "Show usage"
 msgstr ""
 
-#: src/helper/ajax.php:304, src/helper/ajax.php:386
+#: src/helper/ajax.php:310, src/helper/ajax.php:392
 msgid "Source"
 msgstr ""
 
-#: src/helper/ajax.php:302, src/helper/ajax.php:386, src/posttypes/customlinks.php:285
+#: src/helper/ajax.php:308, src/helper/ajax.php:392, src/posttypes/customlinks.php:285
 msgid "Target"
 msgstr ""
 
-#: src/helper/ajax.php:307, src/helper/export.php:33, src/backend/menupage/dashboard.php:85
+#: src/helper/ajax.php:313, src/helper/export.php:33, src/backend/menupage/dashboard.php:85
 msgid "Type"
 msgstr ""
 
-#: src/helper/ajax.php:307, src/backend/menupage/dashboard.php:77, src/backend/menupage/dashboard.php:290
+#: src/helper/ajax.php:313, src/backend/menupage/dashboard.php:77, src/backend/menupage/dashboard.php:290
 msgid "Anchor text"
 msgstr ""
 
-#: src/helper/ajax.php:351
+#: src/helper/ajax.php:357
 msgid "With the free basic version you can view the first 3 links in the detail view."
 msgstr ""
 
-#: src/helper/ajax.php:352, src/helper/ajax.php:412
+#: src/helper/ajax.php:358, src/helper/ajax.php:418
 msgid "Upgrade to Pro and view all"
 msgstr ""
 
-#: src/helper/ajax.php:386
+#: src/helper/ajax.php:392
 msgid "Source type"
 msgstr ""
 
-#: src/helper/ajax.php:386
+#: src/helper/ajax.php:392
 msgid "Target type"
 msgstr ""
 
-#: src/helper/ajax.php:411
+#: src/helper/ajax.php:417
 msgid "The detail view for anchor texts is part of the Pro version."
 msgstr ""
 
-#: src/helper/ajax.php:507
+#: src/helper/ajax.php:514
 msgid "Your web host does not allow file uploads."
 msgstr ""
 
-#: src/helper/ajax.php:507
+#: src/helper/ajax.php:514
 msgid "Please fix the problem and try again."
 msgstr ""
 
-#: src/helper/ajax.php:555
+#: src/helper/ajax.php:563
 msgid "Timeout."
 msgstr ""
 
-#: src/helper/ajax.php:555
+#: src/helper/ajax.php:563
 msgid "Please try to upload again"
 msgstr ""
 
-#: src/helper/ajax.php:572
+#: src/helper/ajax.php:580
 msgid "Nothing to import or no data for import found."
 msgstr ""
 
-#: src/helper/ajax.php:650
+#: src/helper/ajax.php:658
 msgid "The Caches were cleared."
 msgstr ""
 
-#: src/helper/ajax.php:727
+#. translators: %s: Post Type
+#: src/helper/ajax.php:736
 msgid "The cache for the %s has been cleared."
 msgstr ""
 
-#: src/helper/ajax.php:727
+#: src/helper/ajax.php:736
 msgid "The cache for the term has been cleared."
 msgstr ""
 
@@ -561,15 +569,18 @@ msgstr ""
 msgid "Url"
 msgstr ""
 
-#: src/helper/regex-custom-field.php:45
+#. translators: %s: Custom Field Name
+#: src/helper/regex-custom-field.php:46
 msgid "Custom field name starts with '%s'"
 msgstr ""
 
-#: src/helper/regex-custom-field.php:54
+#. translators: %s: Custom Field Name
+#: src/helper/regex-custom-field.php:56
 msgid "Custom field name ends with '%s'"
 msgstr ""
 
-#: src/helper/regex-custom-field.php:63
+#. translators: %s: Custom Field Name
+#: src/helper/regex-custom-field.php:66
 msgid "Custom field name contains '%s'"
 msgstr ""
 
@@ -665,7 +676,7 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: src/posttypes/customlinks.php:462, src/posttypes/customlinks.php:614
+#: src/posttypes/customlinks.php:462, src/posttypes/customlinks.php:610
 msgid "Inactive"
 msgstr ""
 
@@ -779,6 +790,10 @@ msgstr ""
 
 #: src/backend/menupage/dashboard.php:225
 msgid "learn how it works"
+msgstr ""
+
+#: src/backend/menupage/dashboard.php:226
+msgid "Or hit then `Build index` button to start right now"
 msgstr ""
 
 #: src/backend/menupage/dashboard.php:227
@@ -897,16 +912,12 @@ msgstr ""
 msgid "Note: For the case your index build gets stuck, you can restart the index build here"
 msgstr ""
 
-#: src/backend/menupage/keywords-editor.php:24, src/backend/menupage/keywords-editor.php:43
+#: src/backend/menupage/keywords-editor.php:24, src/backend/menupage/keywords-editor.php:44
 msgid "Keywords Editor"
 msgstr ""
 
-#: src/backend/menupage/keywords-editor.php:59
+#: src/backend/menupage/keywords-editor.php:60
 msgid "Search"
-msgstr ""
-
-#: src/backend/menupage/settings.php:41, src/backend/menupage/settings.php:158
-msgid "Settings"
 msgstr ""
 
 #: src/backend/menupage/settings.php:46
@@ -965,27 +976,27 @@ msgstr ""
 msgid "Negative numbers are not allowed."
 msgstr ""
 
-#: src/backend/menupage/settings.php:174, src/backend/menupage/tools.php:148
+#: src/backend/menupage/settings.php:176, src/backend/menupage/tools.php:148
 msgid "Upgrade to Pro now - unlock all features"
 msgstr ""
 
-#: src/backend/menupage/settings.php:193
+#: src/backend/menupage/settings.php:195
 msgid "Save changes"
 msgstr ""
 
-#: src/backend/menupage/settings.php:210
+#: src/backend/menupage/settings.php:212
 msgid "Reset all keywords"
 msgstr ""
 
-#: src/backend/menupage/settings.php:211
+#: src/backend/menupage/settings.php:213
 msgid "This will delete all existing keywords in your site - are you sure you want to do this?"
 msgstr ""
 
-#: src/backend/menupage/settings.php:216
+#: src/backend/menupage/settings.php:218
 msgid "Reset options"
 msgstr ""
 
-#: src/backend/menupage/settings.php:217
+#: src/backend/menupage/settings.php:219
 msgid "You are going to overwrite the existing settings in this section with the defaults."
 msgstr ""
 
@@ -998,7 +1009,7 @@ msgid "Loading"
 msgstr ""
 
 #: src/backend/menupage/tools.php:89
-msgid "An error occured."
+msgid "An error occurred."
 msgstr ""
 
 #: src/backend/menupage/tools.php:89
@@ -1077,7 +1088,7 @@ msgstr ""
 msgid "Export plugin settings"
 msgstr ""
 
-#: src/backend/menupage/tools.php:226, src/backend/menupage/tools.php:265
+#: src/backend/menupage/tools.php:226, src/backend/menupage/tools.php:266
 msgid "Export"
 msgstr ""
 
@@ -1093,47 +1104,52 @@ msgstr ""
 msgid "Export empty configurations"
 msgstr ""
 
-#: src/backend/menupage/tools.php:258
+#. translators: %s: Additional Columns
+#: src/backend/menupage/tools.php:251
+msgid "Include additional columns (%s)"
+msgstr ""
+
+#: src/backend/menupage/tools.php:259
 msgid "These columns will be ignored during import"
 msgstr ""
 
-#: src/backend/menupage/tools.php:284
+#: src/backend/menupage/tools.php:285
 msgid "Import for posts and pages from internal resources"
 msgstr ""
 
-#: src/backend/menupage/tools.php:289, src/backend/menupage/tools.php:337
+#: src/backend/menupage/tools.php:290, src/backend/menupage/tools.php:338
 msgid "Types to apply import"
 msgstr ""
 
-#: src/backend/menupage/tools.php:293, src/backend/menupage/tools.php:298, src/backend/menupage/tools.php:357, src/backend/menupage/tools.php:360
+#: src/backend/menupage/tools.php:294, src/backend/menupage/tools.php:299, src/backend/menupage/tools.php:358, src/backend/menupage/tools.php:361
 msgid "Import"
 msgstr ""
 
-#: src/backend/menupage/tools.php:307, src/backend/menupage/tools.php:346
+#: src/backend/menupage/tools.php:308, src/backend/menupage/tools.php:347
 msgid "Sources"
 msgstr ""
 
-#: src/backend/menupage/tools.php:312
+#: src/backend/menupage/tools.php:313
 msgid "Post titles"
 msgstr ""
 
-#: src/backend/menupage/tools.php:316
+#: src/backend/menupage/tools.php:317
 msgid "Post tags"
 msgstr ""
 
-#: src/backend/menupage/tools.php:333
+#: src/backend/menupage/tools.php:334
 msgid "Import for taxonomies from internal resources"
 msgstr ""
 
-#: src/backend/menupage/tools.php:350
+#: src/backend/menupage/tools.php:351
 msgid "Term titles"
 msgstr ""
 
-#: src/backend/menupage/tools.php:495
+#: src/backend/menupage/tools.php:500
 msgid "No whitelisted post types available."
 msgstr ""
 
-#: src/backend/menupage/tools.php:524
+#: src/backend/menupage/tools.php:529
 msgid "No whitelisted taxonomy types available."
 msgstr ""
 
@@ -1149,39 +1165,39 @@ msgstr ""
 msgid "Advanced linking with pro version"
 msgstr ""
 
-#: src/backend/menupage/tour.php:77
+#: src/backend/menupage/tour.php:79
 msgid "Interactive Tour"
 msgstr ""
 
-#: src/backend/menupage/tour.php:174
+#: src/backend/menupage/tour.php:179
 msgid "Internal Link Juicer Logo"
 msgstr ""
 
-#: src/backend/menupage/tour.php:178
+#: src/backend/menupage/tour.php:183
 msgid "Interactive tutorial"
 msgstr ""
 
-#: src/backend/menupage/tour.php:196
+#: src/backend/menupage/tour.php:201
 msgid "Start the tutorial now"
 msgstr ""
 
-#: src/backend/menupage/tour.php:196
+#: src/backend/menupage/tour.php:201
 msgid "Finish tutorial"
 msgstr ""
 
-#: src/backend/menupage/tour.php:196
+#: src/backend/menupage/tour.php:201
 msgid "Next page"
 msgstr ""
 
-#: src/backend/menupage/tour.php:197
+#: src/backend/menupage/tour.php:202
 msgid "Skip interactive tour"
 msgstr ""
 
-#: src/backend/menupage/tour.php:197
+#: src/backend/menupage/tour.php:202
 msgid "Back to dashboard"
 msgstr ""
 
-#: src/backend/menupage/tour.php:209
+#: src/backend/menupage/tour.php:214
 msgid "Previous page"
 msgstr ""
 
@@ -1385,6 +1401,10 @@ msgstr ""
 msgid "You can use the placeholders <code>{{url}}</code> for the target and <code>{{anchor}}</code> for the generated anchor text."
 msgstr ""
 
+#: src/core/options/linkoutputinternal.php:93
+msgid "With the Pro version you will also have the <code>{{excerpt}}</code> placeholder available for outputting the excerpt, and <code>{{title}}</code> for outputting post/tax title."
+msgstr ""
+
 #: src/core/options/linksperpage.php:40
 msgid "Maximum amount of links per post"
 msgstr ""
@@ -1473,32 +1493,35 @@ msgstr ""
 msgid "Configure according to your environment CPU and RAM availability"
 msgstr ""
 
-#: src/core/options/schedulerbatchsize.php:85
-msgid "Small value"
-msgstr ""
-
-#: src/core/options/schedulerbatchsize.php:85
-msgid "For resource-limited servers, you should set a value close to 1, so the plugin uses less CPU and memory."
-msgstr ""
-
+#. translators: %s: Action Scheduler Minimum Batch Size
 #: src/core/options/schedulerbatchsize.php:85
 msgid "Minimum value is %s"
 msgstr ""
 
-#: src/core/options/schedulerbatchsize.php:86
-msgid "Large value"
-msgstr ""
-
-#: src/core/options/schedulerbatchsize.php:86
-msgid "If you have a lot of RAM and CPU, you can set a value like 100."
-msgstr ""
-
-#: src/core/options/schedulerbatchsize.php:86
+#. translators: %s: Action Scheduler Maximum Batch Size
+#: src/core/options/schedulerbatchsize.php:87
 msgid "Maximum value is %s"
 msgstr ""
 
-#: src/core/options/schedulerbatchsize.php:115
-msgid "%s value must be a number between %s and %s"
+#: src/core/options/schedulerbatchsize.php:89
+msgid "Small value"
+msgstr ""
+
+#: src/core/options/schedulerbatchsize.php:89
+msgid "For resource-limited servers, you should set a value close to 1, so the plugin uses less CPU and memory."
+msgstr ""
+
+#: src/core/options/schedulerbatchsize.php:90
+msgid "Large value"
+msgstr ""
+
+#: src/core/options/schedulerbatchsize.php:90
+msgid "If you have a lot of RAM and CPU, you can set a value like 100."
+msgstr ""
+
+#. translators: 1: Setting Name 2: Minimum Value 3: Maximum Value
+#: src/core/options/schedulerbatchsize.php:120
+msgid "%1$s value must be a number between %2$s and %3$s"
 msgstr ""
 
 #: src/core/options/taxonomywhitelist.php:59
@@ -1525,95 +1548,103 @@ msgstr ""
 msgid "All posts within the allowed post types can link to other posts automatically."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:33
+#: src/backend/menupage/includes/sidebartrait.php:32
 msgid "Support us"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:37
+#: src/backend/menupage/includes/sidebartrait.php:36
 msgid "Do you like the plugin?"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:38
+#: src/backend/menupage/includes/sidebartrait.php:37
 msgid "<strong>Please rate us</strong> or <strong>tell your friends</strong> about the Internal Link Juicer."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:44
+#: src/backend/menupage/includes/sidebartrait.php:43
 msgid "Give us your review"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:49
+#: src/backend/menupage/includes/sidebartrait.php:48
 msgid "Are you looking for a <strong>new feature</strong> or have <strong>suggestions for improvement</strong>?"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:50
+#: src/backend/menupage/includes/sidebartrait.php:49
 msgid "Have you <strong>found a bug</strong>?"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:51
+#: src/backend/menupage/includes/sidebartrait.php:50
 msgid "Please tell us about it."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:57
+#: src/backend/menupage/includes/sidebartrait.php:56
 msgid "Get in touch with us"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:61
+#: src/backend/menupage/includes/sidebartrait.php:60
 msgid "Thank you for using the Internal Link Juicer"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:85
+#: src/backend/menupage/includes/sidebartrait.php:84
 msgid "Activate pro version"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:87
+#: src/backend/menupage/includes/sidebartrait.php:86
 msgid "Achieve even more with Internal Link Juicer Pro:"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:90
+#: src/backend/menupage/includes/sidebartrait.php:89
 msgid "Individual Links"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:90
+#: src/backend/menupage/includes/sidebartrait.php:89
 msgid "More flexible linking with your own <strong>individual URLs</strong> as link targets."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:93
+#: src/backend/menupage/includes/sidebartrait.php:92
 msgid "Maximum control"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:93
+#: src/backend/menupage/includes/sidebartrait.php:92
 msgid "<strong>Shortcode</strong> and <strong>settings</strong> to <strong>exclude</strong> specific areas of content <strong>from link creation</strong>."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:96
+#: src/backend/menupage/includes/sidebartrait.php:95
 msgid "Focused optimization"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:96
+#: src/backend/menupage/includes/sidebartrait.php:95
 msgid "Maximize your results with the comprehensive <strong>Statistics Dashboard</strong>."
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:99
+#: src/backend/menupage/includes/sidebartrait.php:98
 msgid "Activate taxonomies"
 msgstr ""
 
-#: src/backend/menupage/includes/sidebartrait.php:99
+#: src/backend/menupage/includes/sidebartrait.php:98
 msgid "Unlimited possibilities by linking even from and to <strong>categories and tags</strong>."
+msgstr ""
+
+#: src/backend/menupage/includes/sidebartrait.php:112
+msgid "Upgrade now"
+msgstr ""
+
+#: src/backend/menupage/keywords-editor/context.php:61
+msgid "Sorry, You're not allowed to perform this action."
 msgstr ""
 
 #: src/backend/menupage/keywords-editor/table-filters.php:48
 msgid "Filter"
 msgstr ""
 
-#: src/backend/menupage/keywords-editor/table-filters.php:64
+#: src/backend/menupage/keywords-editor/table-filters.php:69
 msgid "All Post Statuses"
 msgstr ""
 
-#: src/backend/menupage/keywords-editor/table-filters.php:71
+#: src/backend/menupage/keywords-editor/table-filters.php:76
 msgid "All Whitelisted Post Types"
 msgstr ""
 
-#: src/backend/menupage/keywords-editor/table-filters.php:95
+#: src/backend/menupage/keywords-editor/table-filters.php:104
 msgid "All Whitelisted Taxonomies"
 msgstr ""
 
@@ -1678,7 +1709,7 @@ msgid "Add your desired keyword to the appropriate input field and confirm using
 msgstr ""
 
 #: src/backend/menupage/tour/editor.php:47
-msgid "You can add your desired keywords one by one or by seperating them with commas."
+msgid "You can add your desired keywords one by one or by separating them with commas."
 msgstr ""
 
 #: src/backend/menupage/tour/editor.php:49
@@ -1918,7 +1949,7 @@ msgid "After activating the Pro version, the Keyword Editor includes taxonomies 
 msgstr ""
 
 #: src/backend/menupage/tour/pro.php:48
-msgid "From then on, even <strong>taxonmy descriptions</strong> are used as linkable content."
+msgid "From then on, even <strong>taxonomy descriptions</strong> are used as linkable content."
 msgstr ""
 
 #: src/backend/menupage/tour/pro.php:50

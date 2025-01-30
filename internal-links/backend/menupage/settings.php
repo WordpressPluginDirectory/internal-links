@@ -76,8 +76,10 @@ class Settings extends AbstractMenuPage
             return;
         }
         $active_tab = 'general';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Determine active class based on the current active tab. No nonce verification needed.
         if (isset($_GET['tab']) && in_array($_GET['tab'], array('general', 'content', 'links', 'actions'))) {
-            $active_tab = $_GET['tab'];
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Add active class based on the current active tab. No nonce verification needed.
+            $active_tab = sanitize_text_field(wp_unslash($_GET['tab']));
         }
         $tabs = apply_filters(self::ILJ_MENUPAGE_SETTINGS_FILTER_TABS, $this->tabs);
         ?>
@@ -166,19 +168,5 @@ class Settings extends AbstractMenuPage
         $this->renderSidebar();
         echo '</div>';
         echo '</div>';
-    }
-    /**
-     * Handles the index rebuilding process after settings got updated
-     *
-     * @since 1.0.0
-     *
-     * @return void
-     */
-    private static function processIndexRebuilding()
-    {
-        if (!isset($_GET['settings-updated']) || 'true' !== $_GET['settings-updated']) {
-            return;
-        }
-        do_action(IndexBuilder::ILJ_INITIATE_BATCH_REBUILD);
     }
 }

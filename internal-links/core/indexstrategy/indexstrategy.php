@@ -367,7 +367,7 @@ class IndexStrategy
         $this->counter = $counter;
     }
     /**
-     * Gets the currect counter value
+     * Gets the current counter value
      *
      * @return int $counter
      */

@@ -103,7 +103,7 @@ class Statistic
         return $anchors;
     }
     /**
-     * A configureable wrapper for the aggregation of columns of the linkindex
+     * A configurable wrapper for the aggregation of columns of the linkindex
      *
      * @deprecated
      * @since      1.0.0
@@ -132,6 +132,7 @@ class Statistic
     {
         global $wpdb;
         $ilj_linkindex_table = $wpdb->prefix . Linkindex::ILJ_DATABASE_TABLE_LINKINDEX;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We need to use a direct query here.
         $index_count = $wpdb->get_var("SELECT count(*) FROM {$ilj_linkindex_table}");
         return (int) $index_count;
     }

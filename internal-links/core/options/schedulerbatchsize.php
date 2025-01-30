@@ -75,7 +75,11 @@ class SchedulerBatchSize extends AbstractOption
      */
     public function getHint()
     {
-        return '<ul class="description">' . '<li><p class="description"><code>' . __('Small value', 'internal-links') . '</code>: ' . __('For resource-limited servers, you should set a value close to 1, so the plugin uses less CPU and memory.', 'internal-links') . ' ' . sprintf(__('Minimum value is %s', 'internal-links'), ActionSchedulerOptions::MINIMAL) . '.</p></li>' . '<li><p class="description"><code>' . __('Large value', 'internal-links') . '</code>: ' . __('If you have a lot of RAM and CPU, you can set a value like 100.', 'internal-links') . ' ' . sprintf(__('Maximum value is %s', 'internal-links'), ActionSchedulerOptions::MAXIMAL) . '.</p></li>' . '</ul>';
+        /* translators: %s: Action Scheduler Minimum Batch Size */
+        $minimum_vale_string = sprintf(__('Minimum value is %s', 'internal-links'), ActionSchedulerOptions::MINIMAL);
+        /* translators: %s: Action Scheduler Maximum Batch Size */
+        $maximum_value_string = sprintf(__('Maximum value is %s', 'internal-links'), ActionSchedulerOptions::MAXIMAL);
+        return '<ul class="description">' . '<li><p class="description"><code>' . __('Small value', 'internal-links') . '</code>: ' . __('For resource-limited servers, you should set a value close to 1, so the plugin uses less CPU and memory.', 'internal-links') . ' ' . $minimum_vale_string . '.</p></li>' . '<li><p class="description"><code>' . __('Large value', 'internal-links') . '</code>: ' . __('If you have a lot of RAM and CPU, you can set a value like 100.', 'internal-links') . ' ' . $maximum_value_string . '.</p></li>' . '</ul>';
     }
     /**
      * Outputs the options form element for backend administration
@@ -101,7 +105,8 @@ class SchedulerBatchSize extends AbstractOption
         $old_value = Options::getOption(self::getKey());
         $has_errors = false;
         if ($value < ActionSchedulerOptions::MINIMAL || $value > ActionSchedulerOptions::MAXIMAL) {
-            add_settings_error('internal-links', 'internal-links-error', sprintf(__('%s value must be a number between %s and %s', 'internal-links'), $this->getTitle(), ActionSchedulerOptions::MINIMAL, ActionSchedulerOptions::MAXIMAL), 'error');
+            /* translators: 1: Setting Name 2: Minimum Value 3: Maximum Value */
+            add_settings_error('internal-links', 'internal-links-error', sprintf(__('%1$s value must be a number between %2$s and %3$s', 'internal-links'), $this->getTitle(), ActionSchedulerOptions::MINIMAL, ActionSchedulerOptions::MAXIMAL), 'error');
             $has_errors = true;
         }
         if ($has_errors) {

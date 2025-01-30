@@ -6,7 +6,7 @@ use ILJ\Core\Options;
 /**
  * Dependencies_Loader
  *
- * Responsible for loading depedencies to render summary card in frontend.
+ * Responsible for loading dependencies to render summary card in frontend.
  *
  * @package ILJ\Backend
  *

@@ -20,8 +20,8 @@ class Cloudflare
         } else {
             $current_limit = 30;
         }
-        $headers = getallheaders();
         // sometimes this function fails, we cannot do anything then
+        $headers = getallheaders();
         if (!is_array($headers)) {
             return $current_limit;
         }

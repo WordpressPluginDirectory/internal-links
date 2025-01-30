@@ -35,8 +35,10 @@ trait PostboxTrait
         if ('' != $args['title_span']) {
             $title = sprintf('<span class="%s">%s</span>', esc_html($args['title_span']), $title);
         }
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Ignored since the data is printed mixed html content.
         printf('%s<h2>%s%s</h2>', $args['before_headline'], $title, isset($help_link) ? $help_link : '');
         echo '      <div class="inside">';
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Ignored since the data is printed mixed html content.
         echo $args['content'];
         echo '      </div>';
         echo '  </div>';

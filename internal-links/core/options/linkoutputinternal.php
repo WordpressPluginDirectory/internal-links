@@ -86,7 +86,7 @@ class LinkOutputInternal extends AbstractOption
     public function getHint()
     {
         $output = '<p>' . __('You can use the placeholders <code>{{url}}</code> for the target and <code>{{anchor}}</code> for the generated anchor text.', 'internal-links') . '</p>';
-        $output .= '<p><small><strong>' . __('With the Pro version you will also have the <code>{{excerpt}}</code> placeholder available for outputting the excerpt, and <code>{{title}}</code> for outputting post/tax title.') . '</strong></small></p>';
+        $output .= '<p><small><strong>' . __('With the Pro version you will also have the <code>{{excerpt}}</code> placeholder available for outputting the excerpt, and <code>{{title}}</code> for outputting post/tax title.', 'internal-links') . '</strong></small></p>';
         return $output;
     }
     /**

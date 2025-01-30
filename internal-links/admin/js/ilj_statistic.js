@@ -95,6 +95,8 @@ function iljCreateModal(title, content) {
 /******/ 
 /************************************************************************/
 var __webpack_exports__ = {};
+// This entry needs to be wrapped in an IIFE because it needs to be isolated against other modules in the chunk.
+(() => {
 /*!***************************************!*\
   !*** ./src/admin/js/ilj_statistic.js ***!
   \***************************************/
@@ -614,3 +616,5 @@ __webpack_require__.r(__webpack_exports__);
     }
   });
 })(jQuery);
+})();
+

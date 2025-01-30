@@ -21,6 +21,7 @@ class Usermeta
     {
         global $wpdb;
         $meta_key = User::ILJ_META_USER;
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We need to use a direct query here.
         return $wpdb->delete($wpdb->usermeta, array('meta_key' => $meta_key));
     }
 }

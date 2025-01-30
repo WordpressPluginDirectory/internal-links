@@ -7,7 +7,7 @@ class Timeout_Monitor_Layer extends Layer
 {
     private $allowed_processing_time_in_secs;
     /**
-     * Initialize the allowed procesing time
+     * Initialize the allowed processing time
      *
      * @param  int   $allowed_processing_time_in_secs
      * @param  mixed $delegate

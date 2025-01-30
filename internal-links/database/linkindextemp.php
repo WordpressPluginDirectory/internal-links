@@ -41,6 +41,7 @@ class LinkindexTemp
     {
         global $wpdb;
         $query_linkindex = 'DROP TABLE IF EXISTS ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . ';';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query($query_linkindex);
     }
     /**
@@ -52,8 +53,10 @@ class LinkindexTemp
     public static function flush()
     {
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $row = $wpdb->get_var("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE table_schema = '" . $wpdb->dbname . "' AND table_name = '" . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . "'");
         if (1 == $row) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Require to get desire result.
             $wpdb->query('TRUNCATE TABLE ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP);
         }
     }
@@ -71,7 +74,9 @@ class LinkindexTemp
             return array();
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared -- Already prepared.
         $query = $wpdb->prepare('SELECT * FROM ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . ' linkindex WHERE linkindex.link_from = %d AND linkindex.type_from = %s', $id, $type);
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -91,6 +96,7 @@ class LinkindexTemp
             return;
         }
         global $wpdb;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- We need to use a direct query here.
         $wpdb->insert($wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP, array('link_from' => $link_from, 'link_to' => $link_to, 'anchor' => $anchor, 'type_from' => $type_from, 'type_to' => $type_to), array('%d', '%d', '%s', '%s', '%s'));
     }
     /**
@@ -102,7 +108,9 @@ class LinkindexTemp
     {
         global $wpdb;
         $dummy_table = $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . '2';
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query('RENAME TABLE ' . $wpdb->prefix . Linkindex::ILJ_DATABASE_TABLE_LINKINDEX . ' TO ' . $dummy_table . ', ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . ' TO ' . $wpdb->prefix . Linkindex::ILJ_DATABASE_TABLE_LINKINDEX . ';');
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $wpdb->query('RENAME TABLE ' . $dummy_table . ' TO ' . $wpdb->prefix . self::ILJ_DATABASE_TABLE_LINKINDEX_TEMP . ';');
         self::uninstall_temp_db();
     }

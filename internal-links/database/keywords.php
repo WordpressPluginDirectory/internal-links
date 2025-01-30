@@ -33,6 +33,7 @@ class Keywords
         $ilj_meta_keys = array(self::ILJ_KEYWORD_META_KEY, Editor::ILJ_META_KEY_LIMITINCOMINGLINKS, Editor::ILJ_META_KEY_MAXINCOMINGLINKS, Editor::ILJ_META_KEY_BLACKLISTDEFINITION, Editor::ILJ_META_KEY_LIMITLINKSPERPARAGRAPH, Editor::ILJ_META_KEY_LINKSPERPARAGRAPH, Editor::ILJ_META_KEY_LIMITOUTGOINGLINKS, Editor::ILJ_META_KEY_MAXOUTGOINGLINKS);
         global $wpdb;
         $table = $wpdb->prefix . $meta_table;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- We need to use a direct query here.
         $wpdb->query("DELETE FROM {$table} WHERE meta_key IN ('" . implode("','", $ilj_meta_keys) . "')");
         Statistic::count_all_configured_keywords();
     }

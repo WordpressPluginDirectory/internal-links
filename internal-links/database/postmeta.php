@@ -38,6 +38,7 @@ class Postmeta
             $fetch_field = $field;
         }
         $query = "\n\t\t\tSELECT postmeta." . $fetch_field . "\n\t\t\tFROM {$wpdb->postmeta} postmeta\n\t\t\tLEFT JOIN {$wpdb->posts} posts ON postmeta.post_id = posts.ID\n\t\t\tWHERE postmeta.meta_key = '{$meta_key}'\n\t\t\tAND posts.post_status = 'publish'\n\t\t\tAND posts.post_type IN ({$public_post_types_list})\n\t\t";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         return $wpdb->get_results($query);
     }
     /**
@@ -60,6 +61,7 @@ class Postmeta
             $public_post_types_list = "'" . implode("','", $public_post_types) . "'";
         }
         $query = "\n\t\t\tSELECT postmeta.*\n\t\t\tFROM {$wpdb->postmeta} postmeta\n\t\t\tLEFT JOIN {$wpdb->posts} posts ON postmeta.post_id = posts.ID\n\t\t\tWHERE postmeta.meta_key = '{$meta_key}'\n\t\t\tAND posts.post_status = 'publish'\n\t\t\tAND posts.post_type IN ({$public_post_types_list}) LIMIT {$offset} , {$limit} \n\t\t";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desire result.
         return $wpdb->get_results($query);
     }
     /**
@@ -79,6 +81,7 @@ class Postmeta
             $public_post_types_list = "'" . implode("','", $public_post_types) . "'";
         }
         $query = "\n\t\t\tSELECT postmeta.*\n\t\t\tFROM {$wpdb->postmeta} postmeta\n\t\t\tLEFT JOIN {$wpdb->posts} posts ON postmeta.post_id = posts.ID\n\t\t\tWHERE postmeta.meta_key = '{$meta_key}'\n\t\t\tAND posts.post_status = 'publish'\n\t\t\tAND posts.post_type IN ({$public_post_types_list}) AND posts.ID = {$id}\n\t\t";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desire result.
         return $wpdb->get_results($query);
     }
     /**
@@ -91,6 +94,7 @@ class Postmeta
     {
         global $wpdb;
         $meta_key = self::ILJ_META_KEY_LINKDEFINITION;
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- We need to use a direct query here.
         return $wpdb->delete($wpdb->postmeta, array('meta_key' => $meta_key));
     }
     public static function getLinkDefinitionCount()
@@ -104,6 +108,7 @@ class Postmeta
             $public_post_types_list = "'" . implode("','", $public_post_types) . "'";
         }
         $query = "\n\t\t\tSELECT COUNT(postmeta.meta_id)\n\t\t\tFROM {$wpdb->postmeta} postmeta\n\t\t\tLEFT JOIN {$wpdb->posts} posts ON postmeta.post_id = posts.ID\n\t\t\tWHERE postmeta.meta_key = '{$meta_key}'\n\t\t\tAND posts.post_status = 'publish'\n\t\t\tAND posts.post_type IN ({$public_post_types_list})\n\t\t";
+        // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Require to get desire result.
         return $wpdb->get_var($query);
     }
 }

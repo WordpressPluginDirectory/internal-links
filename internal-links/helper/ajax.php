@@ -42,7 +42,7 @@ class Ajax
      */
     public static function searchPostsAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-search-posts-action')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-search-posts-action')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -51,7 +51,7 @@ class Ajax
         if (!isset($_POST['search']) && !isset($_POST['per_page']) && !isset($_POST['page'])) {
             wp_die();
         }
-        $search = sanitize_text_field($_POST['search']);
+        $search = sanitize_text_field(wp_unslash($_POST['search']));
         $per_page = (int) $_POST['per_page'];
         $page = (int) $_POST['page'];
         $args = array('s' => $search, 'posts_per_page' => $per_page, 'paged' => $page);
@@ -81,7 +81,7 @@ class Ajax
      */
     public static function indexRebuildAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-dashboard')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-dashboard')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -133,7 +133,7 @@ class Ajax
             self::$cached_html .= '<td>' . $edit_link . ' ' . $asset_link . '</td>';
             self::$cached_html .= '</tr>';
         }
-        echo self::$cached_html;
+        echo wp_kses_post(self::$cached_html);
     }
     /**
      * Renders the statistics for the anchor texts
@@ -162,15 +162,15 @@ class Ajax
      */
     public static function renderLinkDetailStatisticAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-dashboard') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-dashboard') || !current_user_can('manage_options')) {
             die;
         }
         if (!isset($_POST['id']) || !isset($_POST['type']) || !isset($_POST['direction'])) {
             wp_die();
         }
         $id = (int) $_POST['id'];
-        $type = $_POST['type'];
-        $direction = $_POST['direction'];
+        $type = sanitize_text_field(wp_unslash($_POST['type']));
+        $direction = sanitize_text_field(wp_unslash($_POST['direction']));
         $directive_links = Linkindex::getDirectiveLinks($id, $type, $direction);
         if (!count($directive_links)) {
             wp_die();
@@ -216,7 +216,7 @@ class Ajax
             $data .= '  </div>';
             $data .= '</div>';
         }
-        echo $data;
+        echo wp_kses_post($data);
         wp_die();
     }
     /**
@@ -227,7 +227,7 @@ class Ajax
      */
     public static function renderAnchorDetailStatisticAction()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-dashboard') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-dashboard') || !current_user_can('manage_options')) {
             die;
         }
         if (!isset($_POST['anchor'])) {
@@ -240,7 +240,7 @@ class Ajax
         $data .= '      <a href="' . get_admin_url(null, 'admin.php?page=' . AdminMenu::ILJ_MENUPAGE_SLUG . '-pricing') . '"><span class="dashicons dashicons-unlock"></span> ' . __('Upgrade to Pro and view all', 'internal-links') . '</a>';
         $data .= '  </div>';
         $data .= '</div>';
-        echo $data;
+        echo wp_kses_post($data);
         wp_die();
     }
     /**
@@ -251,7 +251,7 @@ class Ajax
      */
     public static function ratingNotificationAdd()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-general-nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-general-nonce')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -279,7 +279,7 @@ class Ajax
      */
     public static function hidePromo()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-general-nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-general-nonce')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -299,18 +299,19 @@ class Ajax
         if (!isset($_POST['nonce']) || !isset($_POST['file_type'])) {
             wp_send_json_error(null, 400);
         }
-        $nonce = $_POST['nonce'];
-        $file_type = $_POST['file_type'];
+        $nonce = sanitize_text_field(wp_unslash($_POST['nonce']));
+        $file_type = sanitize_text_field(wp_unslash($_POST['file_type']));
         if (!in_array($file_type, array('settings', 'keywords'))) {
             wp_send_json_error(null, 400);
         }
         if (!wp_verify_nonce($nonce, 'ilj-tools') || !current_user_can('manage_options')) {
             wp_send_json_error(null, 400);
         }
-        $uploaded_file = $_FILES['file_data'];
+        // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- It's File upload not user input.
+        $uploaded_file = isset($_FILES['file_data']) ? $_FILES['file_data'] : array();
         $upload_overrides = array('test_form' => false, 'test_type' => false);
         if ('keywords' == $file_type) {
-            $uploaded_file['name'] = uniqid(rand(), true) . '.csv';
+            $uploaded_file['name'] = uniqid(wp_rand(), true) . '.csv';
         }
         $file_upload = wp_handle_upload($uploaded_file, $upload_overrides);
         if (!$file_upload || isset($file_upload['error'])) {
@@ -318,8 +319,9 @@ class Ajax
         }
         switch ($file_type) {
             case 'settings':
+                // phpcs:ignore WordPress.WP.AlternativeFunctions.file_get_contents_file_get_contents -- Local file.
                 $file_content = file_get_contents($file_upload['file']);
-                unlink($file_upload['file']);
+                wp_delete_file($file_upload['file']);
                 $file_json = Encoding::jsonToArray($file_content);
                 if (false === $file_json) {
                     wp_send_json_error(null, 400);
@@ -343,8 +345,8 @@ class Ajax
         if (!isset($_POST['nonce']) || !isset($_POST['file_type'])) {
             wp_send_json_error(null, 400);
         }
-        $nonce = $_POST['nonce'];
-        $file_type = $_POST['file_type'];
+        $nonce = sanitize_text_field(wp_unslash($_POST['nonce']));
+        $file_type = sanitize_text_field(wp_unslash($_POST['file_type']));
         if (!in_array($file_type, array('settings', 'keywords'))) {
             wp_send_json_error(null, 400);
         }
@@ -364,7 +366,7 @@ class Ajax
                     wp_send_json_error(null, 400);
                 }
                 $import_count = Keyword::importKeywordsFromFile($upload_transient['file']);
-                unlink($upload_transient['file']);
+                wp_delete_file($upload_transient['file']);
                 break;
         }
         if (0 === $import_count) {
@@ -383,7 +385,7 @@ class Ajax
      */
     public static function renderBatchInfo()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-general-nonce')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-general-nonce')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -418,7 +420,7 @@ class Ajax
      */
     public static function load_link_statistics()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-dashboard') || !current_user_can('manage_options')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-dashboard') || !current_user_can('manage_options')) {
             die;
         }
         $table_columns = array('title', 'keywords_count', 'type', 'incoming_links', 'outgoing_links');
@@ -433,14 +435,14 @@ class Ajax
         if (isset($_REQUEST['order'][0]['dir']) && 'desc' === $_REQUEST['order'][0]['dir']) {
             $sort_direction = 'DESC';
         }
-        $link_statistics = new Link(array('sort_by' => $sort_by, 'sort_direction' => $sort_direction, 'limit' => intval($_REQUEST['length']), 'offset' => intval($_REQUEST['start']), 'search' => (isset($_REQUEST['search']['value']) && is_string($_REQUEST['search']['value'])) ? $_REQUEST['search']['value'] : '', 'main_types' => (isset($_REQUEST['main_types']) && !empty($_REQUEST['main_types']) && is_string($_REQUEST['main_types'])) ? explode(',', $_REQUEST['main_types']) : array(), 'sub_types' => (isset($_REQUEST['sub_types']) && !empty($_REQUEST['sub_types']) && is_string($_REQUEST['sub_types'])) ? explode(',', $_REQUEST['sub_types']) : array()));
+        $link_statistics = new Link(array('sort_by' => $sort_by, 'sort_direction' => $sort_direction, 'limit' => isset($_REQUEST['length']) ? intval($_REQUEST['length']) : 10, 'offset' => isset($_REQUEST['start']) ? intval($_REQUEST['start']) : 0, 'search' => (isset($_REQUEST['search']['value']) && is_string($_REQUEST['search']['value'])) ? sanitize_text_field(wp_unslash($_REQUEST['search']['value'])) : '', 'main_types' => (isset($_REQUEST['main_types']) && !empty($_REQUEST['main_types']) && is_string($_REQUEST['main_types'])) ? explode(',', sanitize_text_field(wp_unslash($_REQUEST['main_types']))) : array(), 'sub_types' => (isset($_REQUEST['sub_types']) && !empty($_REQUEST['sub_types']) && is_string($_REQUEST['sub_types'])) ? explode(',', sanitize_text_field(wp_unslash($_REQUEST['sub_types']))) : array()));
         $total = $link_statistics->get_total();
         /**
          * `recordsTotal`, `recordsFiltered` are standard property names for pagination in data tables
          *
          * @see https://datatables.net/examples/data_sources/server_side
          */
-        echo json_encode(array('recordsTotal' => $total, 'recordsFiltered' => $link_statistics->get_filtered_results_count(), 'data' => $link_statistics->get_statistics(), 'draw' => isset($_REQUEST['draw']) ? intval($_REQUEST['draw']) : 0));
+        echo wp_json_encode(array('recordsTotal' => $total, 'recordsFiltered' => $link_statistics->get_filtered_results_count(), 'data' => $link_statistics->get_statistics(), 'draw' => isset($_REQUEST['draw']) ? intval($_REQUEST['draw']) : 0));
         die;
     }
     /**
@@ -453,14 +455,15 @@ class Ajax
         if (!check_admin_referer('ilj_clear_single_transient') || !current_user_can('manage_options')) {
             return;
         }
-        $id = isset($_REQUEST['ilj_transient_id']) ? sanitize_text_field($_REQUEST['ilj_transient_id']) : '';
-        $type = isset($_REQUEST['ilj_transient_type']) ? sanitize_text_field($_REQUEST['ilj_transient_type']) : '';
+        $id = isset($_REQUEST['ilj_transient_id']) ? sanitize_text_field(wp_unslash($_REQUEST['ilj_transient_id'])) : '';
+        $type = isset($_REQUEST['ilj_transient_type']) ? sanitize_text_field(wp_unslash($_REQUEST['ilj_transient_type'])) : '';
         if (!$id || !in_array($type, array('post', 'term'), true)) {
             return;
         }
         Transient_Cache::delete_cache_for_content(intval($id), $type);
         /* Dont print notice because the ui using this flag will have inbuilt feedback instead of printing the notice */
         if (!isset($_REQUEST['ilj_skip_notice'])) {
+            /* translators: %s: Post Type */
             $message = ('post' === $type) ? sprintf(__('The cache for the %s has been cleared.', 'internal-links'), get_post_type($id)) : __('The cache for the term has been cleared.', 'internal-links');
             \ILJ\ilj_fs()->add_sticky_admin_message($message, 'ilj_clear_single_transient_notice');
             wp_safe_redirect(wp_get_referer());
@@ -476,7 +479,7 @@ class Ajax
      */
     public static function load_anchor_statistics_chunk_callback()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-dashboard')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-dashboard')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -484,7 +487,7 @@ class Ajax
         }
         $request = $_POST;
         $html_chunk = Ajax::render_anchors_statistic($request);
-        echo json_encode($html_chunk);
+        echo wp_json_encode($html_chunk);
         die;
     }
     /**
@@ -496,7 +499,7 @@ class Ajax
      */
     public static function cancel_all_schedules()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-cancel-all-schedule-action')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-cancel-all-schedule-action')) {
             die;
         }
         if (!current_user_can('manage_options')) {
@@ -516,7 +519,7 @@ class Ajax
      */
     public static function fix_database_collation()
     {
-        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'ilj-fix-database-collation-action')) {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'ilj-fix-database-collation-action')) {
             die;
         }
         if (!current_user_can('manage_options')) {

@@ -79,6 +79,7 @@ class DatabaseCollation
         global $wpdb;
         $collation = self::get_collation();
         $sql = "SHOW TABLES LIKE '{$wpdb->prefix}ilj_%'";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $res = $wpdb->get_col($sql);
         if (null !== $res) {
             foreach ($res as $table) {
@@ -97,6 +98,7 @@ class DatabaseCollation
     {
         global $wpdb;
         $sql = "SHOW CREATE TABLE `{$table}`";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $create_table_res = $wpdb->get_row($sql, ARRAY_A);
         $create_table = $create_table_res['Create Table'];
         // determine current collation value
@@ -108,9 +110,11 @@ class DatabaseCollation
         // check table collation and modify if it's an undesired algorithm
         if ($old_coll != $collation_term) {
             $sql = "ALTER TABLE `{$table}` COLLATE={$collation_term}";
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
             $wpdb->query($sql);
         }
         $sql = "SHOW FULL COLUMNS FROM `{$table}`";
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
         $columns_res = $wpdb->get_results($sql, ARRAY_A);
         if (null !== $columns_res) {
             foreach ($columns_res as $row) {
@@ -122,6 +126,7 @@ class DatabaseCollation
                     $null = ('NO' === $row['Null']) ? 'NOT NULL' : 'NULL';
                     $default = (null !== $row['Default']) ? " DEFAULT '{$row['Default']}' " : '';
                     $sql = "ALTER TABLE `{$table}`\n\t\t\t\t\t\tCHANGE `{$row['Field']}` `{$row['Field']}` {$row['Type']} COLLATE {$collation_term} {$null} {$default}";
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared -- We need to use a direct query here.
                     $wpdb->query($sql);
                 }
             }

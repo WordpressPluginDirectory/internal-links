@@ -5,11 +5,14 @@ namespace ILJ\Backend;
 use ILJ\Core\Options;
 use ILJ\Core\Options\CacheToggleBtnSwitch;
 use ILJ\Data\Content;
+use ILJ\Database\Linkindex;
 use ILJ\Helper\Help;
 use ILJ\Type\KeywordList;
 use ILJ\Database\Postmeta;
+use ILJ\Database\Termmeta;
 use ILJ\Helper\Capabilities;
 use ILJ\Helper\IndexAsset as IndexAsset;
+use ILJ\Helper\Statistic;
 /**
  * Admin views
  *
@@ -181,7 +184,7 @@ class Editor
         if (is_null($post_id) || is_null($post)) {
             return;
         }
-        if (!isset($_POST[self::ILJ_ADMINVIEW_NONCE]) || !wp_verify_nonce($_POST[self::ILJ_ADMINVIEW_NONCE], basename(__FILE__))) {
+        if (!isset($_POST[self::ILJ_ADMINVIEW_NONCE]) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST[self::ILJ_ADMINVIEW_NONCE])), basename(__FILE__))) {
             return $post_id;
         }
         $post_type = get_post_type_object($post->post_type);
@@ -189,8 +192,7 @@ class Editor
             return $post_id;
         }
         if (array_key_exists(self::ILJ_META_KEY_BLACKLISTDEFINITION, $_POST)) {
-            $input_blacklist = stripslashes($_POST[self::ILJ_META_KEY_BLACKLISTDEFINITION]);
-            $sanitized_blacklist_meta_value = sanitize_text_field($input_blacklist);
+            $sanitized_blacklist_meta_value = sanitize_text_field(wp_unslash($_POST[self::ILJ_META_KEY_BLACKLISTDEFINITION]));
             $keywordsblacklist = KeywordList::fromInput($sanitized_blacklist_meta_value);
             update_post_meta($post_id, self::ILJ_META_KEY_BLACKLISTDEFINITION, array_slice($keywordsblacklist->getKeywords(), 0, 2));
         }
@@ -200,9 +202,11 @@ class Editor
             self::removeFromBlacklist($post_id, 'post');
         }
         if (array_key_exists(Postmeta::ILJ_META_KEY_LINKDEFINITION . '_keys', $_POST)) {
-            $input = stripslashes($_POST[Postmeta::ILJ_META_KEY_LINKDEFINITION . '_keys']);
-            $sanitized_meta_value = sanitize_text_field($input);
+            $sanitized_meta_value = sanitize_text_field(wp_unslash($_POST[Postmeta::ILJ_META_KEY_LINKDEFINITION . '_keys']));
             $keywords = KeywordList::fromInput($sanitized_meta_value);
+            // Retrieve the old keywords before updating
+            $old_keyword_list = KeywordList::fromMeta($post_id, 'post', Postmeta::ILJ_META_KEY_LINKDEFINITION);
+            $old_keyword_count = $old_keyword_list->getCount();
             $update_status = self::set_keywords($post_id, $keywords);
             /**
              * Fires after keyword meta got saved
@@ -210,7 +214,16 @@ class Editor
              * @since 1.0.0
              */
             if (true == $update_status) {
-                do_action(self::ILJ_ACTION_AFTER_KEYWORDS_UPDATE, $_POST['post_ID'], 'post', $_POST['post_status']);
+                $post_id = isset($_POST['post_ID']) ? intval($_POST['post_ID']) : 0;
+                $post_status = isset($_POST['post_status']) ? sanitize_text_field(wp_unslash($_POST['post_status'])) : '';
+                $keyword_list = KeywordList::fromMeta($post_id, 'post', Postmeta::ILJ_META_KEY_LINKDEFINITION);
+                $keyword_count = $keyword_list->getCount();
+                if ($old_keyword_count > 0 && 0 == $keyword_count) {
+                    Linkindex::delete_link_to($post_id, 'post');
+                    Statistic::updateStatisticsInfo();
+                } elseif ($keyword_count > 0) {
+                    do_action(self::ILJ_ACTION_AFTER_KEYWORDS_UPDATE, $post_id, 'post', $post_status);
+                }
             }
         }
     }
@@ -242,11 +255,13 @@ class Editor
         }
         global $pagenow;
         if (in_array($pagenow, array('post-new.php', 'post.php'))) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It gets the post type on the add/edit post admin dashboard page. No nonce verification needed.
             if (!isset($_GET['post_type'])) {
                 self::registerAssets();
                 return;
             }
-            $post_type = get_post_type_object($_GET['post_type']);
+            // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- It gets the post type on the add/edit post admin dashboard page. No nonce verification needed.
+            $post_type = get_post_type_object(sanitize_text_field(wp_unslash($_GET['post_type'])));
             if (!$post_type || !$post_type->public) {
                 return;
             }
@@ -266,8 +281,8 @@ class Editor
             \ILJ\Helper\Loader::enqueue_script('jquery-ui-sortable');
             \ILJ\Helper\Loader::register_script(Editor::ILJ_KEYWORDS_HANDLE, ILJ_URL . 'admin/js/ilj_keywords.js', array(), ILJ_VERSION);
             \ILJ\Helper\Loader::register_script(Editor::ILJ_EDITOR_HANDLE, ILJ_URL . 'admin/js/ilj_editor.js', array(), ILJ_VERSION);
-            wp_localize_script(Editor::ILJ_EDITOR_HANDLE, 'ilj_editor_translation', Editor::getTranslation());
-            wp_add_inline_script(Editor::ILJ_EDITOR_HANDLE, 'const ilj_editor_basic_restriction = ' . json_encode(Editor::getBasicRestrictions()), 'before');
+            wp_localize_script(Editor::ILJ_EDITOR_HANDLE, 'ilj_editor_translation', array_merge(Editor::getTranslation(), array('nonce' => wp_create_nonce('render-keyword-meta-box-nonce'))));
+            wp_add_inline_script(Editor::ILJ_EDITOR_HANDLE, 'const ilj_editor_basic_restriction = ' . wp_json_encode(Editor::getBasicRestrictions()), 'before');
             \ILJ\Helper\Loader::enqueue_script('ilj_tipso', ILJ_URL . 'admin/js/tipso.js', array(), ILJ_VERSION);
             \ILJ\Helper\Loader::enqueue_script(Editor::ILJ_KEYWORDS_HANDLE);
             \ILJ\Helper\Loader::enqueue_script(Editor::ILJ_EDITOR_HANDLE);
@@ -372,5 +387,23 @@ class Editor
         if ('post' == $type) {
             Options::setOption(\ILJ\Core\Options\Blacklist::getKey(), $blacklist);
         }
+    }
+    /**
+     * Ajax callback that reset keyword meta box for terms
+     *
+     * @return void
+     */
+    public static function render_keyword_meta_box_callback()
+    {
+        if (!isset($_POST['nonce']) || !wp_verify_nonce(sanitize_text_field(wp_unslash($_POST['nonce'])), 'render-keyword-meta-box-nonce')) {
+            die;
+        }
+        if (!current_user_can('manage_options')) {
+            return;
+        }
+        ob_start();
+        self::render_keyword_meta_box_taxonomy__premium_only(null, 'create');
+        $output = ob_get_clean();
+        wp_send_json_success($output);
     }
 }

@@ -74,7 +74,7 @@ class Dashboard extends AbstractMenuPage
         echo '<div class="ilj-row">';
         echo '<div class="col-9">';
         $related = '<p><strong>' . __('Installed version', 'internal-links') . ':</strong> ' . $this->getVersion() . '</p>';
-        $related .= $this->getHelpRessources();
+        $related .= $this->getHelpResources();
         $this->renderPostbox(array('title' => __('Plugin related', 'internal-links'), 'content' => $related));
         $this->renderPostbox(array('title' => __('Linkindex info', 'internal-links'), 'content' => $this->getIndexMeta(), 'class' => 'ilj-indexinfo'));
         $this->renderPostbox(array('title' => __('Statistics', 'internal-links'), 'content' => $this->getStatistics(), 'class' => 'ilj-statistic-wrap', 'help' => Help::getLinkUrl('statistics/', null, 'statistics', 'dashboard')));
@@ -91,13 +91,13 @@ class Dashboard extends AbstractMenuPage
      * @since  1.2.0
      * @return string
      */
-    protected function getHelpRessources()
+    protected function getHelpResources()
     {
         $output = '';
         $url_manual = Help::getLinkUrl(null, null, 'docs', 'dashboard');
         $url_tour = add_query_arg(array('page' => AdminMenu::ILJ_MENUPAGE_SLUG . '-' . Tour::ILJ_MENUPAGE_TOUR_SLUG), admin_url('admin.php'));
         $url_plugins_forum = 'https://wordpress.org/support/plugin/internal-links/';
-        $output .= '<ul class="ilj-ressources divide">';
+        $output .= '<ul class="ilj-resources divide">';
         $output .= '<li>';
         $output .= '<span class="dashicons dashicons-book-alt"></span>';
         $output .= '<a href="' . $url_manual . '" target="_blank" rel="noopener"><strong>' . __('Docs & how to', 'internal-links') . '</strong><span>' . __('Learn how to use the plugin', 'internal-links') . '</span></a>';
@@ -156,7 +156,7 @@ class Dashboard extends AbstractMenuPage
             $help_url = Help::getLinkUrl('editor/', null, 'editor onboarding', 'dashboard');
             $output .= '<p>' . __('Index has no entries yet', 'internal-links') . '.</p>';
             $output .= '<p class="divide" style="display:flex"><span class="dashicons dashicons-arrow-right-alt"></span> <strong>' . __('Start to set some keywords to your posts', 'internal-links') . ' - <a href="' . $help_url . '" target="_blank" rel="noopener">' . __('learn how it works', 'internal-links') . '</a></strong></p>';
-            $first_build_message = '<span class="dashicons dashicons-arrow-right-alt"></span> <strong>' . __('Or hit then `Build index` button to start right now') . '</strong>';
+            $first_build_message = '<span class="dashicons dashicons-arrow-right-alt"></span> <strong>' . __('Or hit then `Build index` button to start right now', 'internal-links') . '</strong>';
             $build_button_text = __('Build index', 'internal-links');
         }
         $output .= '<ul>';
@@ -165,7 +165,7 @@ class Dashboard extends AbstractMenuPage
             $output .= '<li class="ilj-row"><div class="col-4"><strong>' . __('Amount of links in the index', 'internal-links') . '</strong>:</div><div class="col-6" id="ilj-linkindex-count">' . number_format($linkindex_info['last_update']['entries']) . '</div><div class="clear"></div></li>';
             $output .= '<li class="ilj-row"><div class="col-4"><strong>' . __('Amount of configured keywords', 'internal-links') . '</strong>:</div><div class="col-6" id="ilj-configured-keywords-count">' . number_format(Statistic::get_all_configured_keywords_count()) . '</div><div class="clear"></div></li>';
             $output .= '<li class="ilj-row"><div class="col-4"><strong>' . __('Last built', 'internal-links') . '</strong>:</div><div class="col-6" id="ilj-last-built">' . $date->format(get_option('date_format')) . ' ' . __('at', 'internal-links') . ' ' . $date->format(get_option('time_format')) . '</div><div class="clear"></div></li>';
-            $output .= '<li class="ilj-row"><div class="col-4"><strong>' . __('Current index status', 'internal-links') . '</strong>:</div><div class="col-6" id="ilj-index-status">' . __($this->getCurrentIndexStatus(), 'internal-links') . '</div><div class="clear"></div></li>';
+            $output .= '<li class="ilj-row"><div class="col-4"><strong>' . __('Current index status', 'internal-links') . '</strong>:</div><div class="col-6" id="ilj-index-status">' . $this->getCurrentIndexStatus() . '</div><div class="clear"></div></li>';
         }
         $output .= '<li class="ilj-row"><div class="col-4" style="display:flex">' . (('' != $first_build_message) ? $first_build_message : '') . '</div><div class="col-6">' . '<a class="button ilj-index-rebuild ' . $this->disableRebuildButton() . ' " title="' . $this->rebuildButtonTooltip() . '" href="#" >' . $build_button_text . '</a> ' . ' <a class="button ilj-index-restart-rebuild ' . $this->disableRebuildButton('restart') . ' " title="' . $this->rebuildButtonTooltip('restart') . '" href="#" >' . __('Restart index build', 'internal-links') . '</a>' . ' <br> <div class="ilj-index-rebuild-message"><p id="ilj-index-rebuild-message"><p><div class="clear"></div></p></div></div><div class="clear"></div></li>';
         $output .= '</ul>';
